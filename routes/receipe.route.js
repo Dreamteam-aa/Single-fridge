@@ -15,5 +15,4 @@ router.post('/edit/:id', receipeController.doEdit);
 
 router.post('/delete/:id', receipeController.doDelete);
 
-
 module.exports = router;
