@@ -11,17 +11,9 @@ const userSchema = new mongoose.Schema({
     },
     ingredients: {
         type: [
-            {  
-                ingredient: {
-                    type: String
-                },
-                amout: {
-                    type: Number
-                },
-                unit: {
-                    type: String
-                }
-                
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Ingredient'
             }
         ],
         required: [true, 'Ingredients are required']
@@ -75,5 +67,5 @@ userSchema.pre('save', function(next) {
 });
 
 
-const User = mongoose.model('Receipt', userSchema);
-module.exports = User;
+const Receipt = mongoose.model('Receipt', userSchema);
+module.exports = Receipt;
