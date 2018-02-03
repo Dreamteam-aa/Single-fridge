@@ -14,6 +14,7 @@ const flash = require("connect-flash");
 require('./config/db.config');
 require('./config/passport.config').setup(passport);
 
+const receipes = require('./routes/receipe.route');
 const auth = require('./routes/auth.routes');
 const user = require('./routes/user.routes');
 
@@ -53,6 +54,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', auth);
 app.use('/', user);
+app.use('/',receipes);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

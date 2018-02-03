@@ -67,5 +67,5 @@ userSchema.pre('save', function(next) {
 });
 
 
-const Receipt = mongoose.model('Receipt', userSchema);
-module.exports = Receipt;
+const Receipe = mongoose.model('Receipe', userSchema);
+module.exports = Receipe;
