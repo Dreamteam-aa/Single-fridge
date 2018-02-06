@@ -1,8 +1,18 @@
-<% if(typeof(recipe) != 'undefined') { %>
+<% if(typeof(recipes) != 'undefined') { %>
+    <% recipes.forEach(recipe => {%>
     <div>
         Name: <%= recipe.name %>
     </div>
     <div>
         Description: <%= recipe.description %>
-    </div>   
-<% } >
+    </div>
+    <div>
+            Ingredients: 
+    </div>
+    <% recipe.ingredients.forEach(ingredient => { %>
+    <div>
+        <%= ingredient.ingredient.name %>
+    </div>
+    <% }); %>
+    <% }); %>
+<% } %>
