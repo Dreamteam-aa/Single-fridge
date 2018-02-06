@@ -10,13 +10,20 @@ const userSchema = new mongoose.Schema({
         required: [true, 'Description is required']
     },
     ingredients: {
-        type: [
-            {
+        type: [{
+            ingredient: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Ingredient'
+            },
+            amount: {
+                type: String
+               },
+            unit: {
+                type: String
             }
-        ],
-        required: [true, 'Ingredients are required']
+        }
+    ]
+        //Cantidad y unidad de medida lo metemos aqui
     },
     imgs: {
         type: [
