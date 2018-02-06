@@ -11,6 +11,23 @@ module.exports.login = (req, res, next) => {
         flash: req.flash()
     });
 }
+module.exports.doLogin = (req, res, next) => {
+        passport.authenticate('local-auth', (error, user, validation) => {
+            if (error) {
+                next(error);
+            } else if (!user) {
+                res.render('auth/login', { error: validation });
+            } else {
+                req.login(user, (error) => {
+                    if (error) {
+                        next(error);
+                    } else {
+                        res.redirect('/profile');
+                    }
+                });
+            }
+        })(req, res, next);
+    }
 
 module.exports.loginWithProviderCallback = (req, res, next) => {
     passport.authenticate(`${req.params.provider}-auth`, (error, user) => {
