@@ -3,15 +3,11 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, 'Ingredient name is required']
+        required: [true, 'Ingredient name is required'],
+        unique: [true, 'Ingredient already exists']
     },
-    amout: {
-        type: Number,
-        required: [true, 'Amount is required']
-    },
-    unit: {
-        type: String,
-        required: [true, 'Unit is required']
+    description: {
+        type: String
     }
 });
 
