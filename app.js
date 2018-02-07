@@ -11,9 +11,11 @@ const MongoStore = require('connect-mongo')(session);
 const passport = require('passport');
 const flash = require("connect-flash");
 
+
 require('./config/db.config');
 require('./config/passport.config').setup(passport);
 
+const recipes = require('./routes/recipe.route');
 const auth = require('./routes/auth.routes');
 const user = require('./routes/user.routes');
 
@@ -60,6 +62,8 @@ app.use((req, res, next) => {
 
 app.use('/', auth);
 app.use('/', user);
+app.use('/',recipes);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

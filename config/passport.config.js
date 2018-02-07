@@ -3,8 +3,10 @@ const FBStrategy = require('passport-facebook').Strategy;
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 
-const FB_CLIENT_ID = process.env.FB_CLIENT_ID || '693375867717215';
-const FB_CLIENT_SECRET = process.env.FB_CLIENT_SECRET || '2869a6e6ba4232df11cefc7665abaa43';
+
+const FB_CLIENT_ID = process.env.FB_CLIENT_ID || '1586947611388577';
+const FB_CLIENT_SECRET = process.env.FB_CLIENT_SECRET || 'f6b3949099f8d1ee2872b23e06101692';
+
 const FB_CB_URL = '/auth/fb/cb';
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '1002294112479-3fo3ckannlhq7qlpbbfjgv4tkopilunl.apps.googleusercontent.com';
