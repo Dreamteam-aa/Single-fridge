@@ -51,6 +51,13 @@ app.use(passport.session());
 app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use((req, res, next) => {
+  res.locals.title = 'Lonely Fridge';
+  res.locals.session = req.user || {};
+  res.locals.flash = req.flash() || {};
+  next();
+})
+
 app.use('/', auth);
 app.use('/', user);
 
