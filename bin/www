@@ -5,7 +5,7 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('lonely-fridge:server');
+var debug = require('debug')('single-fridge:server');
 var http = require('http');
 
 /**
