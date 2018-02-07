@@ -53,16 +53,10 @@ app.use(passport.session());
 app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
 
-<<<<<<< HEAD
 app.use('/', auth);
 app.use('/', user);
 app.use('/',recipes);
 
-=======
-//app.use('/', index);
-//app.use('/users', users);
-app.use('/',receipes);
->>>>>>> 445b776517eb2193e41c5849ced252629b319ffb
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
