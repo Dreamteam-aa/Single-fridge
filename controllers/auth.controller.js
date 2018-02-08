@@ -1,16 +1,23 @@
 const mongoose = require('mongoose');
 const User = require('../models/user.model');
 const passport = require('passport');
+const session = require('express-session');
 
 module.exports.signup = (req, res, next) => {
-    res.render('auth/signup');
+    if (typeof(session) !== 'undefined') {
+        res.redirect('/')}
+        else {
+            res.render('auth/signup');
+            }
 }
 
 module.exports.login = (req, res, next) => {
-    res.render('auth/login',{
-        flash: req.flash()
-    });
-}
+            res.render('auth/login',{
+                flash: req.flash()
+            });
+            }
+
+
 module.exports.doLogin = (req, res, next) => {
         passport.authenticate('local-auth', (error, user, validation) => {
             if (error) {
@@ -46,12 +53,6 @@ module.exports.loginWithProviderCallback = (req, res, next) => {
 }
 
 module.exports.logout = (req, res, next) => {
-    req.session.destroy(error => {
-        if (error) {
-            next(error);
-        } else {
-            req.logout();
-            res.redirect("/login");
-        }
-    });
+    req.logout();
+    res.redirect('/');
 }
