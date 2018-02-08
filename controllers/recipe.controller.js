@@ -12,7 +12,6 @@ module.exports.show = (req, res, next) => {
             console.log(recipes);
         User.findById(recipes[0].author)
         .then((user) => {
-            console.log(user);
             res.render('recipes/show', {
                 recipes: recipes,
                 author: user
