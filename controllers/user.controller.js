@@ -1,7 +1,18 @@
 const User = require('../models/user.model');
+const Recipes = require('../models/recipe.model');
 
 module.exports.profile = (req, res, next) => {
-    res.render('user/profile');
+    Recipes.find({author: req.user._id})
+        .populate('ingredients.ingredient')
+        .sort({ createdAt: -1 })
+        .then((recipes) => {
+            console.log(recipes);
+            res.render('user/profile', {
+                recipes: recipes
+            });
+        })
+        .catch(error => next(error));
+    
 }
 
 module.exports.list = (req, res, next) => {

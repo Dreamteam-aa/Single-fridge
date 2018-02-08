@@ -40,11 +40,8 @@ const userSchema = new mongoose.Schema({
         ]
     },
     author: {
-        type: 
-            {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'User'
-            }
     },
     url: {
         type: String
