@@ -1,6 +1,57 @@
-
-<div class="row">
-  <div class="col-xs-12 col-sm-6 col-sm-offset-3">
-      <h4>Hi! @<%= session.username %> </h4>
+  <div class="row">
+    <div class="col-xs-3">
+      <div class="row">
+          <div class="col-sm-2"></div>
+          <div class="col-sm-8">
+              <img src="http://voice4thought.org/wp-content/uploads/2016/08/default1.jpg" class="profile-pic" height="100">
+          </div>
+          <div class="col-sm-2"></div>
+      </div>
+      <div class="row">
+          <h3>User:</h3>
+          <%= session.username %>
+      </div>
+    </div>
+    <div class="col-xs-9">
+      <h2>Recipes</h2>
+      <% if(typeof(recipes) != 'undefined') { %>
+      <div class="container">
+          <div class="well well-sm">
+              <strong>Display</strong>
+              <div class="btn-group">
+                  <a href="#" id="list" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-th-list">
+                  </span>List</a> <a href="#" id="grid" class="btn btn-default btn-sm"><span
+                      class="glyphicon glyphicon-th"></span>Grid</a>
+              </div>
+          </div>
+          <div id="products" class="row list-group">
+              <% recipes.forEach(recipe => {%>
+              <div class="item  col-xs-4 col-lg-4">
+                  <div class="thumbnail">
+                      <img class="group list-group-image" src="http://placehold.it/400x250/000/fff" alt="" />
+                      <div class="caption">
+                          <h4 class="group inner list-group-item-heading">
+                              <%= recipe.name %></h4>
+                              <p class="group inner list-group-item-text">
+                                  <% recipe.ingredients.forEach(ingredient => { %>
+                                        <%= ingredient.ingredient.name %>  
+                                  <% }); %>
+                              </p>
+                          <div class="row">
+                              <div class="col-xs-12 col-md-8">
+                                  <p class="lead">
+                                      <%= session.username %></p>
+                              </div>
+                              <div class="col-xs-12 col-md-4">
+                                  <a class="btn btn-success" href="http://www.jquery2dotnet.com">Edit</a>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <% }); %>
+          </div>
+      </div>      
+      <% } %>
+    </div>
   </div>
-</div>

@@ -10,9 +10,15 @@ module.exports.show = (req, res, next) => {
         .sort({ createdAt: -1 })
         .then((recipes) => {
             console.log(recipes);
+        User.findById(recipes[0].author)
+        .then((user) => {
+            console.log(user);
             res.render('recipes/show', {
-                recipes: recipes
+                recipes: recipes,
+                author: user
             });
+        });
+            
         })
         .catch(error => next(error));
 }
@@ -34,11 +40,11 @@ module.exports.doCreate = (req, res, next) => {
     ingredients = req.body.ingredients.split(",");
     recipes = req.body.name;
     
-    
+    console.log(req.user);
     recipe = new Recipe({
        name: req.body.name,
-       description: req.body.description
-   //    author: req.user._id
+       description: req.body.description,
+       author: req.user._id
       });
     recipe.save()
         .then((savedRecipe) => {
@@ -54,8 +60,8 @@ module.exports.doCreate = (req, res, next) => {
                         ing.save()
                         .then((savedIng) => {
                             ingredientsIds.push(savedIng);
-                            console.log(savedIng);
-                            console.log(ingredientsIds);
+                       //     console.log(savedIng);
+                       //     console.log(ingredientsIds);
                             Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: savedIng._id }}})
                                 .then(() => next());
                         })
