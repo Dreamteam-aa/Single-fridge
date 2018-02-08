@@ -4,15 +4,16 @@ const SALT_WORK_FACTOR = 10;
 
 const userSchema = new mongoose.Schema({
   username: String,
+  userEmail: String,
   password: String,
   facebookID: String,
   googleID: String,
   description: String,
-  recepies: {
+  recipes: {
     type: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Recepies'
+            ref: 'Recipes'
         }
     ],
     default: []

@@ -58,7 +58,8 @@ passport.deserializeUser((id, next) => {
                 } else {
                     const email = profile.emails ? profile.emails[0].value : null;
                     user = new User({
-                        username: email || DEFAULT_USERNAME,
+                        userEmail: email || DEFAULT_USERNAME,
+                        username: email.split("@" , 1),
                         password: Math.random().toString(36).slice(-8), // FIXME: insecure, use secure random seed
                         social: {
                             [provider]: profile.id
