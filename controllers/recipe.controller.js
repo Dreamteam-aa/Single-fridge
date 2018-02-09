@@ -3,6 +3,7 @@ const Recipe = require('../models/recipe.model');
 const Ingredient = require('../models/ingredient.model');
 const User = require('../models/user.model');
 const passport = require('passport');
+const _ = require('underscore');
 
 module.exports.show = (req, res, next) => {
     Recipe.find()
@@ -28,6 +29,94 @@ module.exports.showOne = (req, res, next) => {
            recipes: recipes
          });
        }); 
+}
+
+module.exports.edit = (req, res, next) => {
+    Recipe.findById(req.params.id)
+    .populate('ingredients.ingredient')
+    .then((recipe) => {
+         res.render('recipes/edit', {
+           recipe: recipe
+         });
+       }); 
+}
+
+module.exports.doEdit = (req, res, next) => {
+    Recipe.findById(req.params.id).then((recipe) => {
+         res.render('recipe/edit', {
+           recipes: recipes
+         });
+       }); 
+}
+
+module.exports.search = (req, res, next) => {
+    var arrayOfIds = [];
+    var recipes = [];
+    var auxArray = [];
+    const ingredientsIds = [];
+    Recipe.find()
+        .then((recipes) => {
+            recipes.forEach(recipe => {
+                arrayOfIds.push(recipe._id);
+            });
+        })
+        .catch(error => next(error));
+    ingredients = req.body.ingredients.split(",");
+    console.log(ingredients);
+    ingredients.forEach(element => {
+        Ingredient.findOne({ name: element })
+        .then(ing => {
+            if (ing != null) {
+                ingredientsIds.push(ing._id);
+                console.log(ingredientsIds);
+                Recipe.find( { ingredients: { ingredient: ing._id }} )
+                    .then(recipe => {
+                         
+                    if(recipe != []){
+                    recipe.forEach(element => {
+                        auxArray.push(element._id);
+                    });
+                    console.log("rec");
+                    arrayOfIds = _.intersection(arrayOfIds, auxArray);
+                    console.log(arrayOfIds);
+                    } else {
+                        next();
+                    }
+                  })
+                .catch(error => next(error));
+            } else {
+                next();
+         }
+        }).catch(error => next(error));
+    }).then(response => {
+        arrayOfIds.forEach(id => {
+            Recipe.findById(id)
+            .then(recipe => {
+                if (recipe != null) {
+                    recipes.push(recipe);
+                } else {
+                    next();
+             }
+            }).catch(error => next(error));
+        });
+    })
+    .catch(error => next(error));
+    
+    
+
+    if(recipes.length<1){
+        error = {
+            text: "No recipes with these ingredients"
+        };
+    }
+
+    res.render("recipes/search", {
+        recipes: recipes,
+        errors: error,
+        search: req.body.ingredients
+    });
+    
+
 }
 
 module.exports.create = (req, res, next) => {

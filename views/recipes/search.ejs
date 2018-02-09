@@ -1,25 +1,7 @@
 <div class="row">
 <div class="col-sm-6 col-sm-offset-3">
-    <img src="https://softwaretechhub.com/assets/frontend/images/logo-2.png" alt="logo" width="660">
+    <h2><%= ingredients %></h2>
 </div>
-</div>
-<div class="container">
-        <div class="row">
-            <div class="col-sm-6 col-sm-offset-3">
-                <div id="imaginary_container"> 
-                    <div class="input-group stylish-input-group">
-                        <form action="/search" method="post">
-                            <input type="text" class="form-control" name="ingredients" placeholder="Search" >
-                            <span class="input-group-addon">
-                                <button type="submit">
-                                    <span class="glyphicon glyphicon-search"></span>
-                                </button>  
-                            </span>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
 </div>
 <br>
 <% if(typeof(recipes) != 'undefined' && recipes.length > 0) { %>
@@ -49,4 +31,6 @@
         <% }); %>
     </div>
 </div>      
+<% } else { %>
+    <h2><%= errors.text%></h2>
 <% } %>
