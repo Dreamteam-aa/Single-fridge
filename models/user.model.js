@@ -6,8 +6,10 @@ const userSchema = new mongoose.Schema({
   username: String,
   userEmail: String,
   password: String,
-  facebookID: String,
-  googleID: String,
+  social: {
+    facebookId: String,
+    googleId: String
+},
   description: String,
   recipes: {
     type: [

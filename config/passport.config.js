@@ -65,7 +65,6 @@ passport.deserializeUser((id, next) => {
                             [provider]: profile.id
                         }
                     });
-                    console.log
                     user.save()
                         .then(() => {
                             next(null, user);
