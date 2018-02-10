@@ -3,7 +3,13 @@ const Recipe = require('../models/recipe.model');
 const Ingredient = require('../models/ingredient.model');
 const User = require('../models/user.model');
 const passport = require('passport');
+require('isomorphic-fetch'); // or another library of choice.
+var Dropbox = require('dropbox').Dropbox;
 const _ = require('underscore');
+var fs = require('fs');
+var path = require('path');
+var prompt = require('prompt');
+const ACCESS_TOKEN_DB = "2iy2FNkeNWYAAAAAAAAA5tHBa8ANCECRZdM4uioQC0Oh3JHXjNbL9d3ECz292NWp";
 
 module.exports.show = (req, res, next) => {
     Recipe.find()
@@ -82,8 +88,21 @@ module.exports.doCreate = (req, res, next) => {
     const ingredientsIds = [];
     ingredients = req.body.ingredients.split(",");
     recipes = req.body.name;
-    
-    console.log(req.user);
+    console.log(req.files);
+    var dbx = new Dropbox({ accessToken: ACCESS_TOKEN_DB });
+    fs.readFile(path.join(__dirname, req.body.img), 'utf8', function (err, contents) {
+    if (err) {
+      console.log('Error: ', err);
+    }
+    // This uploads basic.js to the root of your dropbox
+    dbx.filesUpload({ path: req.body.img, contents: contents })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  });
     recipe = new Recipe({
        name: req.body.name,
        description: req.body.description,
@@ -95,7 +114,6 @@ module.exports.doCreate = (req, res, next) => {
                 ing = new Ingredient({
                     name: element
                 });
-                
               Ingredient.findOne({ name: element })
                 .then(ing => {
                     if (ing != null) {
@@ -108,13 +126,8 @@ module.exports.doCreate = (req, res, next) => {
                         });
                         ing.save()
                         .then((savedIng) => {
-                     //  ingredientsIds.push(savedIng.name);
-                      //      console.log(element);
                             Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: savedIng.name }}})
                                 .then(() =>  next());
-                       //     console.log(savedIng);
-                       //     console.log(ingredientsIds);
-                            
                         })
                         .catch(error => {
                             if (error instanceof mongoose.Error.ValidationError) {

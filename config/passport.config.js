@@ -51,6 +51,7 @@ passport.deserializeUser((id, next) => {
         } else {
             next();
         }
+        console.log(profile);
         User.findOne({ [`social.${provider}`]: profile.id })
             .then(user => {
                 if (user) {

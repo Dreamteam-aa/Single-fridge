@@ -5,7 +5,7 @@ const session = require('express-session');
 
 module.exports.signup = (req, res, next) => {
     if (typeof(session) !== 'undefined') {
-        res.redirect('/')}
+        res.redirect('/login')}
         else {
             res.render('auth/signup');
             }
