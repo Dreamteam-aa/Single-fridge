@@ -3,13 +3,7 @@ const Recipe = require('../models/recipe.model');
 const Ingredient = require('../models/ingredient.model');
 const User = require('../models/user.model');
 const passport = require('passport');
-require('isomorphic-fetch'); // or another library of choice.
-var Dropbox = require('dropbox').Dropbox;
-const _ = require('underscore');
-var fs = require('fs');
-var path = require('path');
-var prompt = require('prompt');
-const ACCESS_TOKEN_DB = "2iy2FNkeNWYAAAAAAAAA5tHBa8ANCECRZdM4uioQC0Oh3JHXjNbL9d3ECz292NWp";
+
 
 module.exports.show = (req, res, next) => {
     Recipe.find()
@@ -38,7 +32,6 @@ module.exports.showOne = (req, res, next) => {
 
 module.exports.edit = (req, res, next) => {
     Recipe.findById(req.params.id)
-    .populate('ingredients.ingredient')
     .then((recipe) => {
          res.render('recipes/edit', {
            recipe: recipe
@@ -59,7 +52,6 @@ module.exports.search = (req, res, next) => {
     Recipe.find( { 'ingredients.ingredient':{ $all : ingredients} })
         .then(recipes => {
             if( recipes.length > 0 ){
-                console.log(recipes);
                 res.render('recipes/search', {
                 recipes: recipes,
                 ingredients: ingredients
@@ -73,11 +65,8 @@ module.exports.search = (req, res, next) => {
                     } 
                     });
             }
-            
         })
         .catch(error => next(error));
-    
-
 }
 
 module.exports.create = (req, res, next) => {
@@ -85,31 +74,21 @@ module.exports.create = (req, res, next) => {
 }
 
 module.exports.doCreate = (req, res, next) => {
-    const ingredientsIds = [];
+    const imgs = [];
+   // console.log(req.body);
     ingredients = req.body.ingredients.split(",");
     recipes = req.body.name;
-    console.log(req.files);
-    var dbx = new Dropbox({ accessToken: ACCESS_TOKEN_DB });
-    fs.readFile(path.join(__dirname, req.body.img), 'utf8', function (err, contents) {
-    if (err) {
-      console.log('Error: ', err);
-    }
-    // This uploads basic.js to the root of your dropbox
-    dbx.filesUpload({ path: req.body.img, contents: contents })
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (err) {
-        console.log(err);
-      });
-  });
+    img = req.file ? req.file.filename : '';
+    imgs.push(img);
     recipe = new Recipe({
        name: req.body.name,
        description: req.body.description,
-       author: req.user._id
+       author: req.user._id,
+       imgs: imgs
       });
     recipe.save()
         .then((savedRecipe) => {
+            console.log(savedRecipe);
             ingredients.forEach(element => {
                 ing = new Ingredient({
                     name: element

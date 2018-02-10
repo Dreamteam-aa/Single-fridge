@@ -1,5 +1,5 @@
 <h1>Edit</h1>
-<form method="POST" action="/recipes/create">
+<form method="POST" action="/recipes/edit/<%= recipe._id %>" enctype="multipart/form-data">
     <div>
         <input type="text" name="name" class="form-control" placeholder="Recipe name" value="<%= recipe.name%>">
         <% if (typeof(error) != 'undefined' && error.name) { %>
@@ -19,9 +19,17 @@
     <div>   
             <% var ingredients = []; %>
             <% recipe.ingredients.forEach(ing => { %>
-            <% ingredients.push(ing.ingredient.name) %>
+            <% ingredients.push(ing.ingredient) %>
             <% })%>
             <input type="text" name="ingredients" class="form-control" placeholder="Ingredients (separate by ,)" value="<%= ingredients %>">
+            <% if (typeof(error) != 'undefined' && error.description) { %>
+            <label class="control-label"> 
+                <%= error.description %> 
+            </label>
+            <% } %>
+    </div>
+    <div>
+            <input type="file" name="img" class="form-control" title="Images" multiple>
             <% if (typeof(error) != 'undefined' && error.description) { %>
             <label class="control-label"> 
                 <%= error.description %> 
