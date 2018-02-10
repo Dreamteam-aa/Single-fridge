@@ -12,8 +12,9 @@ const userSchema = new mongoose.Schema({
     ingredients: {
         type: [{
             ingredient: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Ingredient'
+                type: String,
+                ref: 'Ingredient',
+                field: 'name'
             },
             amount: {
                 type: String

@@ -34,13 +34,13 @@
                         <%= recipe.name %></h4>
                         <p class="group inner list-group-item-text">
                             <% recipe.ingredients.forEach(ingredient => { %>
-                                  <%= ingredient.ingredient.name %>  
+                                  <%= ingredient.ingredient %>  
                             <% }); %>
                         </p>
                     <div class="row">
                         <div class="col-xs-12 col-md-9">
                             <p class="lead">
-                                <%= session.username %></p>
+                                <%= recipe.author.username %></p>
                         </div>
                     </div>
                 </div>
