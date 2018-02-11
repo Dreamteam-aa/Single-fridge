@@ -32,13 +32,17 @@
               <% recipes.forEach(recipe => {%>
               <div class="item  col-xs-4 col-lg-4">
                   <div class="thumbnail">
+                      <% if( recipe.imgs.length ){%>
+                        <img class="group list-group-image" src="/uploads/<%= recipe.imgs%>" alt="" />
+                      <% } else { %>
                       <img class="group list-group-image" src="http://placehold.it/400x250/000/fff" alt="" />
+                      <% } %>
                       <div class="caption">
                           <h4 class="group inner list-group-item-heading">
                               <%= recipe.name %></h4>
                               <p class="group inner list-group-item-text">
                                   <% recipe.ingredients.forEach(ingredient => { %>
-                                        <%= ingredient.ingredient.name %>  
+                                        <%= ingredient.ingredient %>  
                                   <% }); %>
                               </p>
                           <div class="row">
@@ -47,7 +51,7 @@
                                       <%= session.username %></p>
                               </div>
                               <div class="col-xs-12 col-md-3">
-                                  <a class="btn btn-success" href="http://www.jquery2dotnet.com">Edit</a>
+                                  <a class="btn btn-success" href="/edit/<%= recipe._id %>">Edit</a>
                               </div>
                           </div>
                       </div>

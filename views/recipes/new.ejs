@@ -1,5 +1,5 @@
 <h1>New recipe</h1>
-<form method="POST" action="/recipes/create">
+<form method="POST" action="/recipes/create" enctype="multipart/form-data">
     <div>
         <input type="text" name="name" class="form-control" placeholder="Recipe name">
         <% if (typeof(error) != 'undefined' && error.name) { %>
@@ -18,6 +18,14 @@
     </div>
     <div>
             <input type="text" name="ingredients" class="form-control" placeholder="Ingredients (separate by ,)">
+            <% if (typeof(error) != 'undefined' && error.description) { %>
+            <label class="control-label"> 
+                <%= error.description %> 
+            </label>
+            <% } %>
+    </div>
+    <div>
+            <input type="file" name="img" class="form-control" title="Images">
             <% if (typeof(error) != 'undefined' && error.description) { %>
             <label class="control-label"> 
                 <%= error.description %> 

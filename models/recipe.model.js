@@ -12,8 +12,9 @@ const userSchema = new mongoose.Schema({
     ingredients: {
         type: [{
             ingredient: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Ingredient'
+                type: String,
+                ref: 'Ingredient',
+                field: 'name'
             },
             amount: {
                 type: String
@@ -26,11 +27,7 @@ const userSchema = new mongoose.Schema({
         //Cantidad y unidad de medida lo metemos aqui
     },
     imgs: {
-        type: [
-            {
-                type: String
-            }
-        ]
+        type: String
     },
     rating: {
         type: [

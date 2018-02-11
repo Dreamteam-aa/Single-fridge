@@ -1,0 +1,46 @@
+<div class="row">
+<div class="col-sm-6 col-sm-offset-5">
+    <h2><%= ingredients %></h2>
+</div>
+</div>
+<br>
+<% if(typeof(recipes) != 'undefined' && recipes.length > 0) { %>
+<div class="row">
+    <div id="products" class="row list-group">
+        <% recipes.forEach(recipe => {%>
+        <div class="item  col-xs-3 col-lg-3">
+            <div class="thumbnail">
+                <% if( recipe.imgs.length ){%>
+                <img class="group list-group-image" src="/uploads/<%= recipe.imgs%>" alt="" />
+                <% } else { %>
+                <img class="group list-group-image" src="http://placehold.it/400x250/000/fff" alt="" />
+                <% } %>
+                <div class="caption">
+                    <h4 class="group inner list-group-item-heading">
+                        <%= recipe.name %></h4>
+                        <p class="group inner list-group-item-text">
+                            <% recipe.ingredients.forEach(ingredient => { %>
+                                  <%= ingredient.ingredient.name %>  
+                            <% }); %>
+                        </p>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-9">
+                            <p class="lead">
+                                <%= session.username %></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% }); %>
+    </div>
+</div>      
+<% } else { %>
+    <div class="col-sm-6 col-sm-offset-3">
+            <h2><%= errors.text%></h2>
+    </div>
+    <div class="col-sm-7 col-sm-offset-3">
+            <img src="https://s3.favim.com/orig/140430/comida-eat-empty-eyes-Favim.com-1719552.jpg" alt="Empty fridge">
+
+    </div>
+<% } %>
