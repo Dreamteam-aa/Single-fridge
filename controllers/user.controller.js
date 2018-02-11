@@ -3,11 +3,9 @@ const Recipes = require('../models/recipe.model');
 
 module.exports.profile = (req, res, next) => {
     Recipes.find({author: req.user._id})
-        //.populate('ingredients.ingredient')
         .sort({ createdAt: -1 })
         .then((recipes) => {
             if( recipes.length > 0 ){
-        //    console.log(recipes[0].ingredients[0].name);
             res.render('user/profile', {
                 recipes: recipes
             });
