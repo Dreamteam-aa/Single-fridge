@@ -30,6 +30,7 @@ module.exports.list = (req, res, next) => {
 }
 
 module.exports.editProfile= (req, res, next) => {
+ console.log("hola");
   User.findById(req.params.id)
   .then((user) => {
        res.render('user/edit', {
@@ -42,7 +43,7 @@ module.exports.editProfile= (req, res, next) => {
 
 
 module.exports.doEdit= (req, res, next) => {
-    console.log(session.user._id)
+    //console.log(session.user._id)
     const userId = req.user._id;
     const updates = {
         username: req.body.username,
@@ -50,6 +51,6 @@ module.exports.doEdit= (req, res, next) => {
     };
   
     User.findByIdAndUpdate(userId, updates).then((user) => {
-      res.redirect('user/profile');
+      res.redirect('/profile');
     });
   };
