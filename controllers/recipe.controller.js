@@ -40,11 +40,105 @@ module.exports.edit = (req, res, next) => {
 }
 
 module.exports.doEdit = (req, res, next) => {
-    Recipe.findById(req.params.id).then((recipe) => {
-         res.render('recipe/edit', {
-           recipes: recipes
-         });
-       }); 
+    if(req.file){
+        ingredients = req.body.ingredients.split(",");
+        img = req.file ? req.file.filename : '';
+        Recipe.findByIdAndUpdate(req.params.id,{$set: { name: req.body.name, description: req.body.description, imgs: img }}, { 'new': true} )
+        .then((savedRecipe) => {
+            console.log(savedRecipe);
+            ingredients.forEach(element => {
+                ing = new Ingredient({
+                    name: element
+                });
+              Ingredient.findOne({ name: element })
+                .then(ing => {
+                    if (ing != null) {
+                        Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: ing.name }}})
+                                .then(() =>  next());
+                        next();
+                    } else {
+                        ing = new Ingredient({
+                            name: element
+                        });
+                        ing.save()
+                        .then((savedIng) => {
+                            Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: savedIng.name }}})
+                                .then(() =>  next());
+                        })
+                        .catch(error => {
+                            if (error instanceof mongoose.Error.ValidationError) {
+                                res.render('recipes/edit', { 
+                                    recipes: recipes,
+                                    error: error.errors 
+                                });
+                            } else {
+                                next(error);
+                            }
+                        });
+                 }
+                }).catch(error => next(error));
+            });
+          res.redirect('/profile');
+        }).catch(error => {
+          if (error instanceof mongoose.Error.ValidationError) {
+            res.render('recipe/edit', {
+              recipe: recipe,
+              error: error.errors
+            });
+          } else {
+            next(error);
+          }
+        });
+    } else {
+        ingredients = req.body.ingredients.split(",");
+        Recipe.findByIdAndUpdate(req.params.id,{$set: { name: req.body.name, description: req.body.description}}, { 'new': true} )
+        .then((savedRecipe) => {
+            console.log(savedRecipe);
+            ingredients.forEach(element => {
+                ing = new Ingredient({
+                    name: element
+                });
+              Ingredient.findOne({ name: element })
+                .then(ing => {
+                    if (ing != null) {
+                        Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: ing.name }}})
+                                .then(() =>  next());
+                        next();
+                    } else {
+                        ing = new Ingredient({
+                            name: element
+                        });
+                        ing.save()
+                        .then((savedIng) => {
+                            Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: savedIng.name }}})
+                                .then(() =>  next());
+                        })
+                        .catch(error => {
+                            if (error instanceof mongoose.Error.ValidationError) {
+                                res.render('recipes/edit', { 
+                                    recipes: recipes,
+                                    error: error.errors 
+                                });
+                            } else {
+                                next(error);
+                            }
+                        });
+                 }
+                }).catch(error => next(error));
+            });
+          res.redirect('/profile');
+        }).catch(error => {
+          if (error instanceof mongoose.Error.ValidationError) {
+            res.render('recipe/edit', {
+              recipe: recipe,
+              error: error.errors
+            });
+          } else {
+            next(error);
+          }
+        });
+    }
+    
 }
 
 module.exports.search = (req, res, next) => {
@@ -74,17 +168,14 @@ module.exports.create = (req, res, next) => {
 }
 
 module.exports.doCreate = (req, res, next) => {
-    const imgs = [];
-   // console.log(req.body);
     ingredients = req.body.ingredients.split(",");
     recipes = req.body.name;
     img = req.file ? req.file.filename : '';
-    imgs.push(img);
     recipe = new Recipe({
        name: req.body.name,
        description: req.body.description,
        author: req.user._id,
-       imgs: imgs
+       imgs: img
       });
     recipe.save()
         .then((savedRecipe) => {

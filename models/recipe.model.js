@@ -27,11 +27,7 @@ const userSchema = new mongoose.Schema({
         //Cantidad y unidad de medida lo metemos aqui
     },
     imgs: {
-        type: [
-            {
-                type: String
-            }
-        ]
+        type: String
     },
     rating: {
         type: [
