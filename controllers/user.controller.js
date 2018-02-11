@@ -28,3 +28,28 @@ module.exports.list = (req, res, next) => {
         })
         .catch(error => next(error));
 }
+
+module.exports.editProfile= (req, res, next) => {
+  Users.findById(req.params.id)
+  .then((user) => {
+       res.render('user/edit', {
+        user: user
+       });
+     }); 
+    }
+
+
+
+
+module.exports.doEdit= (req, res, next) => {
+    console.log(session.user._id)
+    const userId = req.user._id;
+    const updates = {
+        username: req.body.username,
+        description: req.body.description
+    };
+  
+    User.findByIdAndUpdate(userId, updates).then((user) => {
+      res.redirect('/profile');
+    });
+  };
