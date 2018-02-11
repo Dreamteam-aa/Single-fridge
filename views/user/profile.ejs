@@ -45,13 +45,18 @@
                                         <%= ingredient.ingredient %>  
                                   <% }); %>
                               </p>
+                              <br>
                           <div class="row">
-                              <div class="col-xs-12 col-md-9">
-                                  <p class="lead">
-                                      <%= session.username %></p>
+                              <div class="col-xs-12 col-md-8">
+                                  <p><strong>
+                                        <%= session.username %>
+                                  </strong></p>
                               </div>
-                              <div class="col-xs-12 col-md-3">
+                              <div class="col-xs-12 col-md-2">
                                   <a class="btn btn-success" href="/edit/<%= recipe._id %>">Edit</a>
+                              </div>
+                              <div class="col-xs-12 col-md-2">
+                                    <a class="btn btn-danger" href="/delete/<%= recipe._id %>">X</a>
                               </div>
                           </div>
                       </div>

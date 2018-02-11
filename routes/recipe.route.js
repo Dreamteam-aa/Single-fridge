@@ -16,7 +16,7 @@ router.post('/recipes/create', uploader.single('img'), recipeController.doCreate
 router.get('/edit/:id', recipeController.edit);
 router.post('/recipes/edit/:id', uploader.single('img'), recipeController.doEdit);
 
-//router.post('/delete/:id', receipeController.doDelete);
+router.get('/delete/:id', recipeController.delete);
 
 module.exports = router;
 

@@ -30,6 +30,14 @@ module.exports.showOne = (req, res, next) => {
        }); 
 }
 
+module.exports.delete = (req, res, next) => {
+    console.log("ASDF");
+    Recipe.findByIdAndRemove(req.params.id)
+    .then((recipe) => {
+         res.redirect('/profile');
+       }); 
+}
+
 module.exports.edit = (req, res, next) => {
     Recipe.findById(req.params.id)
     .then((recipe) => {
