@@ -30,7 +30,7 @@ module.exports.list = (req, res, next) => {
 }
 
 module.exports.editProfile= (req, res, next) => {
-  Users.findById(req.params.id)
+  User.findById(req.params.id)
   .then((user) => {
        res.render('user/edit', {
         user: user
@@ -50,6 +50,6 @@ module.exports.doEdit= (req, res, next) => {
     };
   
     User.findByIdAndUpdate(userId, updates).then((user) => {
-      res.redirect('/profile');
+      res.redirect('user/profile');
     });
   };

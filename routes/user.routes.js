@@ -8,8 +8,8 @@ const uploader = multer({dest:'./public/uploads'});
 
 router.get('/profile', secure.isAuthenticated, userController.profile);
 
-router.get('/edit/:id', userController.editProfile);
-router.post('/edit/:id', uploader.single('img'), userController.doEdit);
+router.get('/user/edit/:id', userController.editProfile);
+router.post('/user/edit/:id', uploader.single('img'), userController.doEdit);
 
 // router.get('/delete/:id', userController.delete);
 
