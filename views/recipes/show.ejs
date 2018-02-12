@@ -9,7 +9,7 @@
                     <form action="/search" method="post">
                         <div id="imaginary_container"> 
                                 <div class="input-group stylish-input-group">
-                                    <input type="text" class="form-control"  placeholder="What's in your fridge?" >
+                                    <input type="text" name="ingredients" class="form-control" placeholder="What's in your fridge?" >
                                     <span class="input-group-addon">
                                         <button type="submit">
                                             <span class="glyphicon glyphicon-search"></span>
@@ -26,10 +26,11 @@
 <div class="row">
     <div id="products" class="row list-group">
         <% recipes.forEach(recipe => {%>
+        <a href="/recipes/<%= recipe._id %>">
         <div class="item  col-xs-3 col-lg-3">
             <div class="thumbnail">
-                <% if( recipe.imgs.length ){%>
-                <img class="group list-group-image" src="<%= recipe.imgs%>" alt="" />
+                <% if( recipe.imgs ){%>
+                <img class="group list-group-image" src="https://dl.dropboxusercontent.com/s<%= recipe.imgs%>" alt="" />
                 <% } else { %>
                 <img class="group list-group-image" src="http://placehold.it/400x250/000/fff" alt="" />
                 <% } %>
@@ -44,12 +45,13 @@
                     <div class="row">
                         <div class="col-xs-12 col-md-9">
                             <p class="lead">
-                                <%= recipe.author %></p>
+                                <%= recipe.author.username %></p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        </a>
         <% }); %>
     </div>
 </div>      

@@ -25,6 +25,25 @@
                 $('#list').click(function(event){event.preventDefault();$('#products .item').addClass('list-group-item');});
                 $('#grid').click(function(event){event.preventDefault();$('#products .item').removeClass('list-group-item');$('#products .item').addClass('grid-group-item');});
             });
+            var $star_rating = $('.star-rating .fa');
+
+            var SetRatingStar = function() {
+            return $star_rating.each(function() {
+                if (parseInt($star_rating.siblings('input.rating-value').val()) >= parseInt($(this).data('rating'))) {
+                return $(this).removeClass('fa-star-o').addClass('fa-star');
+                } else {
+                return $(this).removeClass('fa-star').addClass('fa-star-o');
+                }
+            });
+            };
+
+            $star_rating.on('click', function() {
+            $star_rating.siblings('input.rating-value').val($(this).data('rating'));
+            return SetRatingStar();
+            });
+
+            SetRatingStar();
+            
     </script>
 </body>
 </html>

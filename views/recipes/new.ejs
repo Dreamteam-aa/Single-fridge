@@ -25,10 +25,18 @@
             <% } %>
     </div>
     <div>
-            <input type="file" name="img" class="form-control" title="Images">
-            <% if (typeof(error) != 'undefined' && error.description) { %>
+            <textarea rows="4" name="directions" class="form-control" placeholder="Step by step directions"></textarea>
+            <% if (typeof(error) != 'undefined' && error.directions) { %>
             <label class="control-label"> 
-                <%= error.description %> 
+                <%= error.directions %> 
+            </label>
+            <% } %>
+    </div>
+    <div>
+            <input type="file" name="img" class="form-control" title="Images">
+            <% if (typeof(error) != 'undefined' && error.img) { %>
+            <label class="control-label"> 
+                <%= error.img %> 
             </label>
             <% } %>
     </div>

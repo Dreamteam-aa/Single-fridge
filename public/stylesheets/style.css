@@ -9,7 +9,9 @@ body {
 a {
   color: #00B7FF;
 }
-
+.navrow{
+  background-color: white;
+}
 
 .stylish-input-group .input-group-addon{
   background: white !important; 
@@ -19,7 +21,7 @@ a {
 border-right:0; 
 box-shadow:0 0 0; 
 border-color:#ccc;
-height: 55px;
+height: 75px;
 }
 .stylish-input-group button{
   border:0;
@@ -35,3 +37,9 @@ height: 55px;
   padding-left: 10%;
   width: 90%;
 }
+.star-rating {
+  line-height:32px;
+  font-size:1.25em;
+}
+
+.star-rating .fa-star{color: yellow;}
