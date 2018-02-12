@@ -16,6 +16,14 @@
         </label>
         <% } %>
     </div>
+    <div>
+        <textarea rows="4" name="directions" class="form-control" placeholder="Step by step directions"><%= recipe.directions %></textarea>
+        <% if (typeof(error) != 'undefined' && error.directions) { %>
+        <label class="control-label"> 
+            <%= error.directions %> 
+        </label>
+        <% } %>
+    </div>
     <div>   
             <% var ingredients = []; %>
             <% recipe.ingredients.forEach(ing => { %>
@@ -30,9 +38,9 @@
     </div>
     <div>
             <input type="file" name="img" class="form-control" title="Images" multiple>
-            <% if (typeof(error) != 'undefined' && error.description) { %>
+            <% if (typeof(error) != 'undefined' && error.imgs) { %>
             <label class="control-label"> 
-                <%= error.description %> 
+                <%= error.imgs %> 
             </label>
             <% } %>
     </div>
