@@ -35,3 +35,9 @@ height: 55px;
   padding-left: 10%;
   width: 90%;
 }
+.star-rating {
+  line-height:32px;
+  font-size:1.25em;
+}
+
+.star-rating .fa-star{color: yellow;}

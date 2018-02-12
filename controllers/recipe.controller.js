@@ -29,8 +29,8 @@ module.exports.show = (req, res, next) => {
 
 module.exports.showOne = (req, res, next) => {
     Recipe.findById(req.params.id).then((recipe) => {
-         res.render('recipe/show', {
-           recipes: recipes
+         res.render('recipes/showOne', {
+           recipe: recipe
          });
        }); 
 }
@@ -137,7 +137,7 @@ module.exports.doEdit = (req, res, next) => {
                  }
                 }).catch(error => next(error));
             });
-          res.redirect('/profile');
+         
         }).catch(error => {
           if (error instanceof mongoose.Error.ValidationError) {
             res.render('recipe/edit', {
@@ -153,6 +153,7 @@ module.exports.doEdit = (req, res, next) => {
 }
 
 module.exports.search = (req, res, next) => {
+    console.log(req.body);
     const ingredients = req.body.ingredients.split(",");
     Recipe.find( { 'ingredients.ingredient':{ $all : ingredients} })
         .then(recipes => {
@@ -185,7 +186,8 @@ module.exports.doCreate = (req, res, next) => {
     recipe = new Recipe({
        name: req.body.name,
        description: req.body.description,
-       author: req.user._id
+       author: req.user._id,
+       directions: req.body.directions
       });
     recipe.save()
         .then((savedRecipe) => {
@@ -223,7 +225,7 @@ module.exports.doCreate = (req, res, next) => {
                  }
                 }).catch(error => next(error));
             });
-          res.redirect('/profile');
+            setTimeout(res.redirect("/profile"),10);
         }).catch(error => {
           if (error instanceof mongoose.Error.ValidationError) {
             res.render('recipe/new', {
@@ -238,14 +240,16 @@ module.exports.doCreate = (req, res, next) => {
 
 function uploadDB(filePath,savedRecipe){
     path = "./public/uploads/" + filePath;
-    fs.readFile(path, 'utf8', function (err, contents) {
+    fs.readFile(path, function (err, contents) {
         if (err) {
           console.log('Error: ', err);
         } 
-    
+        console.log(filePath);
+        console.log()
         // This uploads basic.js to the root of your dropbox
         dbx.filesUpload({ path: '/' + filePath, contents: contents })
           .then(function (response) {
+            console.log(response);
             parameters = {
                     "path": response.path_lower,
                     "settings": {
@@ -254,7 +258,10 @@ function uploadDB(filePath,savedRecipe){
             };
             dbx.sharingCreateSharedLinkWithSettings(parameters)
             .then(response => {
-                Recipe.findByIdAndUpdate(savedRecipe, { imgs: response.url }, { new: true })
+                urlAux = response.url.split("/s");
+                url = urlAux[1].split("?");
+                console.log(url);
+                Recipe.findByIdAndUpdate(savedRecipe, { imgs: url[0] }, { new: true })
                                 .then((recipe) => console.log(recipe));
                // return response.url;
             })
