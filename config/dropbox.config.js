@@ -3,7 +3,6 @@ require('isomorphic-fetch');
 var fs = require('fs');
 var path = require('path');
 var prompt = require('prompt');
-const ACCESS_TOKEN = "2iy2FNkeNWYAAAAAAAAA6E2nrYYL--f3MkSAtvn72g-4sDHe1qW51QJRCOxPtu6y";
 var dbx = new Dropbox({ accessToken: ACCESS_TOKEN });
 const User = require('../models/user.model');
 const Recipe = require('../models/recipe.model');

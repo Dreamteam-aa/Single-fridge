@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 const DB_NAME = 'single-fridge';
-const MONGO_URI = `mongodb://localhost/${DB_NAME}`;
+//const MONGO_URI = `mongodb://localhost/${DB_NAME}`;
 
 mongoose.Promise = Promise;
 
-mongoose.connect(MONGO_URI)
+mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
     console.log(`Connected to ${DB_NAME} database.`);
   }).catch((error) => {
