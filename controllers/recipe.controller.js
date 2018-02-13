@@ -53,8 +53,8 @@ module.exports.doEdit = (req, res, next) => {
     const ingredients = req.body.ingredients.split(",");
     const img = req.file ? req.file.filename : '';
     const updateObj = req.file
-        ? { name: req.body.name, description: req.body.description, imgs: img }
-        : { name: req.body.name, description: req.body.description }
+        ? { name: req.body.name, description: req.body.description, ingredients: [], imgs: img }
+        : { name: req.body.name, description: req.body.description, ingredients: [] }
     Recipe.findByIdAndUpdate(req.params.id,{$set: updateObj}, { 'new': true } )
     .then((savedRecipe) => {
         ingredients.forEach(element => {
