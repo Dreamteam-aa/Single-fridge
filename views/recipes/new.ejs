@@ -8,8 +8,11 @@
         </label>
         <% } %>
     </div>
+    <br>
     <div>
-        <input type="text" name="description" class="form-control" placeholder="Recipe description">
+            <div class="form-group">
+                    <textarea class="form-control" rows="5" id="description" name="description" placeholder="Recipe description"></textarea>
+                  </div>
         <% if (typeof(error) != 'undefined' && error.description) { %>
         <label class="control-label"> 
             <%= error.description %> 
@@ -24,6 +27,7 @@
             </label>
             <% } %>
     </div>
+    <br>
     <div>
             <textarea rows="4" name="directions" class="form-control" placeholder="Step by step directions"></textarea>
             <% if (typeof(error) != 'undefined' && error.directions) { %>
@@ -32,6 +36,7 @@
             </label>
             <% } %>
     </div>
+    <br>
     <div>
             <input type="file" name="img" class="form-control" title="Images">
             <% if (typeof(error) != 'undefined' && error.img) { %>
