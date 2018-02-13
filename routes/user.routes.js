@@ -19,7 +19,7 @@ const uploader = multer({ storage: storage });
 router.get('/profile', secure.isAuthenticated, userController.profile);
 
 router.get('/user/edit/:id', userController.editProfile);
-router.post('/user/edit/:id', uploader.single('img'), userController.doEdit);
+router.post('/user/edit/:id', uploader.single('profileImg'), userController.doEdit);
 
 // router.get('/delete/:id', userController.delete);
 

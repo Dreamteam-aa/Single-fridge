@@ -48,33 +48,28 @@ module.exports.editProfile= (req, res, next) => {
 
 
 
-
-module.exports.doEdit= (req, res, next) => {
+module.exports.doEdit = (req, res, next) => {
     const userId = req.user._id;
     img = req.file ? req.file.filename : '';
     const updates = {
         username: req.body.username,
-        description: req.body.description,
-        profileImg: img
+        description: req.body.description
     };
     User.findByIdAndUpdate(userId, updates).then((user) => {
         uploadDB(img,user);
       res.redirect('/profile');
     });
-  };
+};
 
-  function uploadDB(filePath,updatedProfile){
+function uploadDB(filePath,updatedProfile){
     path = "./public/uploads/" + filePath;
     fs.readFile(path, function (err, contents) {
         if (err) {
           console.log('Error: ', err);
         } 
-        console.log(filePath);
-        console.log()
         // This uploads basic.js to the root of your dropbox
         dbx.filesUpload({ path: '/' + filePath, contents: contents })
           .then(function (response) {
-            console.log(response);
             parameters = {
                     "path": response.path_lower,
                     "settings": {
@@ -86,7 +81,7 @@ module.exports.doEdit= (req, res, next) => {
                 urlAux = response.url.split("/s");
                 url = urlAux[1].split("?");
                 console.log(url);
-                User.findByIdAndUpdate(updatedProfile, { imgs: url[0] }, { new: true })
+                User.findByIdAndUpdate(updatedProfile, { profileImg: url[0] }, { new: true })
                                 .then((user) => console.log(user));
                // return response.url;
             })
@@ -98,5 +93,4 @@ module.exports.doEdit= (req, res, next) => {
             console.log(err);
           });
       });
-    
-}
+    }
