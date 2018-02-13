@@ -191,43 +191,6 @@ module.exports.doCreate = (req, res, next) => {
         });
 }
 
-<<<<<<< HEAD
-=======
-function uploadDB(filePath,savedRecipe){
-    path = "./public/uploads/" + filePath;
-    fs.readFile(path, function (err, contents) {
-        if (err) {
-          console.log('Error: ', err);
-        } 
-        // This uploads basic.js to the root of your dropbox
-        dbx.filesUpload({ path: '/' + filePath, contents: contents })
-          .then(function (response) {
-            parameters = {
-                    "path": response.path_lower,
-                    "settings": {
-                        "requested_visibility": "public"
-                }
-            };
-            dbx.sharingCreateSharedLinkWithSettings(parameters)
-            .then(response => {
-                urlAux = response.url.split("/s");
-                url = urlAux[1].split("?");
-                console.log(url);
-                Recipe.findByIdAndUpdate(savedRecipe, { imgs: url[0] }, { new: true })
-                                .then((recipe) => console.log(recipe));
-               // return response.url;
-            })
-            .catch(function (err) {
-                console.log(err);
-              });
-          })
-          .catch(function (err) {
-            console.log(err);
-          });
-      });
-    
-}
->>>>>>> fix: update ingredients
 
 
   
