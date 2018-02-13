@@ -53,10 +53,11 @@ module.exports.edit = (req, res, next) => {
 }
 
 module.exports.doEdit = (req, res, next) => {
+    var ingredientsAux = [];
     if(req.file){
         ingredients = req.body.ingredients.split(",");
         img = req.file ? req.file.filename : '';
-        Recipe.findByIdAndUpdate(req.params.id,{$set: { name: req.body.name, description: req.body.description, imgs: img }}, { 'new': true} )
+        Recipe.findByIdAndUpdate(req.params.id,{$set: { name: req.body.name, description: req.body.description, imgs: img, ingredients: ingredientsAux}}, { 'new': true} )
         .then((savedRecipe) => {
             ingredients.forEach(element => {
                 ing = new Ingredient({
@@ -65,7 +66,7 @@ module.exports.doEdit = (req, res, next) => {
               Ingredient.findOne({ name: element })
                 .then(ing => {
                     if (ing != null) {
-                        Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: ing.name }}})
+                        Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: ing.name }}},{upsert:true})
                                 .then(() =>  next());
                         next();
                     } else {
@@ -74,7 +75,7 @@ module.exports.doEdit = (req, res, next) => {
                         });
                         ing.save()
                         .then((savedIng) => {
-                            Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: savedIng.name }}})
+                            Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: savedIng.name }}},{upsert:true})
                                 .then(() =>  next());
                         })
                         .catch(error => {
@@ -103,31 +104,34 @@ module.exports.doEdit = (req, res, next) => {
         });
     } else {
         ingredients = req.body.ingredients.split(",");
-        Recipe.findByIdAndUpdate(req.params.id,{$set: { name: req.body.name, description: req.body.description}}, { 'new': true} )
+        Recipe.findByIdAndUpdate(req.params.id,{$set: { name: req.body.name, description: req.body.description,ingredients: ingredientsAux}}, { 'new': true} )
         .then((savedRecipe) => {
+            console.log(savedRecipe);
             ingredients.forEach(element => {
                 ing = new Ingredient({
                     name: element
                 });
               Ingredient.findOne({ name: element })
-                .then(ing => {
+                .then(ing => {                   
                     if (ing != null) {
-                        Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: ing.name }}})
-                                .then(() =>  next());
-                        next();
+                        console.log("HOLa"); 
+                        Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: ing.name }}},{upsert:true})
+                                .then(() => next());
+                       // next();
                     } else {
+                        console.log("HOLa2"); 
                         ing = new Ingredient({
                             name: element
                         });
                         ing.save()
                         .then((savedIng) => {
-                            Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: savedIng.name }}})
+                            Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: savedIng.name }}}, {upsert:true})
                                 .then(() =>  next());
                         })
                         .catch(error => {
                             if (error instanceof mongoose.Error.ValidationError) {
                                 res.render('recipes/edit', { 
-                                    recipes: recipes,
+                                    recipes: savedRecipe,
                                     error: error.errors 
                                 });
                             } else {
@@ -137,7 +141,7 @@ module.exports.doEdit = (req, res, next) => {
                  }
                 }).catch(error => next(error));
             });
-         
+        res.redirect("/profile");
         }).catch(error => {
           if (error instanceof mongoose.Error.ValidationError) {
             res.render('recipe/edit', {
@@ -244,12 +248,9 @@ function uploadDB(filePath,savedRecipe){
         if (err) {
           console.log('Error: ', err);
         } 
-        console.log(filePath);
-        console.log()
         // This uploads basic.js to the root of your dropbox
         dbx.filesUpload({ path: '/' + filePath, contents: contents })
           .then(function (response) {
-            console.log(response);
             parameters = {
                     "path": response.path_lower,
                     "settings": {
