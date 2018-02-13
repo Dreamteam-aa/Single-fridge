@@ -3,13 +3,18 @@
       <div class="row">
           <div class="col-sm-2"></div>
           <div class="col-sm-8">
-              <img src="http://voice4thought.org/wp-content/uploads/2016/08/default1.jpg" class="profile-pic" height="100">
-          </div>
+                <% console.log(session.profileImg)%>
+                <% if( typeof(session.profileImg) != 'undefined' && session.profileImg ){%>
+                 <img class="profile-pic" height="100" src="https://dl.dropboxusercontent.com/s<%= session.profileImg%>" alt="" />
+              <% }%>
+            </div>
           <div class="col-sm-2"></div>
       </div>
       <div class="row">
           <h3>User:</h3>
           <%= session.username %>
+          <h4>About me:</h4>
+          <%= session.description %>
       </div>
       <br><br>
       <div class="row">

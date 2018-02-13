@@ -3,13 +3,10 @@ const Recipe = require('../models/recipe.model');
 const Ingredient = require('../models/ingredient.model');
 const User = require('../models/user.model');
 const passport = require('passport');
-var Dropbox = require('dropbox').Dropbox;
-require('isomorphic-fetch');
-var fs = require('fs');
-var path = require('path');
-var prompt = require('prompt');
-const ACCESS_TOKEN = "2iy2FNkeNWYAAAAAAAAA6E2nrYYL--f3MkSAtvn72g-4sDHe1qW51QJRCOxPtu6y";
-var dbx = new Dropbox({ accessToken: ACCESS_TOKEN });
+
+
+const dbx = require ('../config/dropbox.config');
+
 
 module.exports.show = (req, res, next) => {
     Recipe.find()
@@ -53,103 +50,59 @@ module.exports.edit = (req, res, next) => {
 }
 
 module.exports.doEdit = (req, res, next) => {
-    if(req.file){
-        ingredients = req.body.ingredients.split(",");
-        img = req.file ? req.file.filename : '';
-        Recipe.findByIdAndUpdate(req.params.id,{$set: { name: req.body.name, description: req.body.description, imgs: img }}, { 'new': true} )
-        .then((savedRecipe) => {
-            ingredients.forEach(element => {
-                ing = new Ingredient({
-                    name: element
-                });
-              Ingredient.findOne({ name: element })
-                .then(ing => {
-                    if (ing != null) {
-                        Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: ing.name }}})
-                                .then(() =>  next());
-                        next();
-                    } else {
-                        ing = new Ingredient({
-                            name: element
-                        });
-                        ing.save()
-                        .then((savedIng) => {
-                            Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: savedIng.name }}})
-                                .then(() =>  next());
-                        })
-                        .catch(error => {
-                            if (error instanceof mongoose.Error.ValidationError) {
-                                res.render('recipes/edit', { 
-                                    recipes: recipes,
-                                    error: error.errors 
-                                });
-                            } else {
-                                next(error);
-                            }
-                        });
-                 }
-                }).catch(error => next(error));
-            });
-          res.redirect('/profile');
-        }).catch(error => {
-          if (error instanceof mongoose.Error.ValidationError) {
-            res.render('recipe/edit', {
-              recipe: recipe,
-              error: error.errors
-            });
-          } else {
-            next(error);
-          }
+    const ingredients = req.body.ingredients.split(",");
+    const img = req.file ? req.file.filename : '';
+    const updateObj = req.file
+        ? { name: req.body.name, description: req.body.description, imgs: img }
+        : { name: req.body.name, description: req.body.description }
+    Recipe.findByIdAndUpdate(req.params.id,{$set: updateObj}, { 'new': true } )
+    .then((savedRecipe) => {
+        ingredients.forEach(element => {
+            Ingredient.findOne({ name: element })
+            .then(ing => {
+                if (ing != null) {
+                    Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: ing.name }}})
+                            .then(() =>  next());
+                    next();
+                } else {
+                    ing = new Ingredient({
+                        name: element
+                    });
+                    ing.save()
+                    .then((savedIng) => {
+                        Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: savedIng.name }}})
+                            .then(() =>  next());
+                    })
+                    .catch(error => {
+                        if (error instanceof mongoose.Error.ValidationError) {
+                            res.render('recipes/edit', { 
+                                recipes: recipes,
+                                error: error.errors 
+                            });
+                        } else {
+                            next(error);
+                        }
+                    });
+                }
+            })
+            .catch(error => next(error));
         });
-    } else {
-        ingredients = req.body.ingredients.split(",");
-        Recipe.findByIdAndUpdate(req.params.id,{$set: { name: req.body.name, description: req.body.description}}, { 'new': true} )
-        .then((savedRecipe) => {
-            ingredients.forEach(element => {
-                ing = new Ingredient({
-                    name: element
-                });
-              Ingredient.findOne({ name: element })
-                .then(ing => {
-                    if (ing != null) {
-                        Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: ing.name }}})
-                                .then(() =>  next());
-                        next();
-                    } else {
-                        ing = new Ingredient({
-                            name: element
-                        });
-                        ing.save()
-                        .then((savedIng) => {
-                            Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: savedIng.name }}})
-                                .then(() =>  next());
-                        })
-                        .catch(error => {
-                            if (error instanceof mongoose.Error.ValidationError) {
-                                res.render('recipes/edit', { 
-                                    recipes: recipes,
-                                    error: error.errors 
-                                });
-                            } else {
-                                next(error);
-                            }
-                        });
-                 }
-                }).catch(error => next(error));
-            });
-         
-        }).catch(error => {
-          if (error instanceof mongoose.Error.ValidationError) {
-            res.render('recipe/edit', {
-              recipe: recipe,
-              error: error.errors
-            });
-          } else {
-            next(error);
-          }
+        if (img) { 
+            dbx.uploadDB(img, savedRecipe);
+            res.redirect('/profile');
+        } else {
+            res.redirect('/profile');
+        }
+    }).catch(error => {
+        if (error instanceof mongoose.Error.ValidationError) {
+        res.render('recipe/edit', {
+            recipe: recipe,
+            error: error.errors
         });
-    }
-    
+        } else {
+        next(error);
+        }
+    });
 }
 
 module.exports.search = (req, res, next) => {
@@ -192,7 +145,7 @@ module.exports.doCreate = (req, res, next) => {
     recipe.save()
         .then((savedRecipe) => {
             console.log(savedRecipe);
-            uploadDB(img,savedRecipe._id);
+            dbx.uploadDB(img,savedRecipe._id);
             ingredients.forEach(element => {
                 ing = new Ingredient({
                     name: element
@@ -238,43 +191,6 @@ module.exports.doCreate = (req, res, next) => {
         });
 }
 
-function uploadDB(filePath,savedRecipe){
-    path = "./public/uploads/" + filePath;
-    fs.readFile(path, function (err, contents) {
-        if (err) {
-          console.log('Error: ', err);
-        } 
-        console.log(filePath);
-        console.log()
-        // This uploads basic.js to the root of your dropbox
-        dbx.filesUpload({ path: '/' + filePath, contents: contents })
-          .then(function (response) {
-            console.log(response);
-            parameters = {
-                    "path": response.path_lower,
-                    "settings": {
-                        "requested_visibility": "public"
-                }
-            };
-            dbx.sharingCreateSharedLinkWithSettings(parameters)
-            .then(response => {
-                urlAux = response.url.split("/s");
-                url = urlAux[1].split("?");
-                console.log(url);
-                Recipe.findByIdAndUpdate(savedRecipe, { imgs: url[0] }, { new: true })
-                                .then((recipe) => console.log(recipe));
-               // return response.url;
-            })
-            .catch(function (err) {
-                console.log(err);
-              });
-          })
-          .catch(function (err) {
-            console.log(err);
-          });
-      });
-    
-}
 
 
   
