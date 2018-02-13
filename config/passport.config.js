@@ -21,15 +21,15 @@ passport.deserializeUser((id, next) => {
 });
 
     passport.use('fb-auth', new FBStrategy({
-        clientID: FB_CLIENT_ID,
-        clientSecret: FB_CLIENT_SECRET,
+        clientID: process.env.FB_CLIENT_ID,
+        clientSecret: process.env.FB_CLIENT_SECRET,
         callbackURL: FB_CB_URL,
         profileFields: ['id', 'emails']
     }, authenticateOAuthUser));
 
     passport.use('google-auth', new GoogleStrategy({
-        clientID: GOOGLE_CLIENT_ID,
-        clientSecret: GOOGLE_CLIENT_SECRET,
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL: GOOGLE_CB_URL
     }, authenticateOAuthUser));
 

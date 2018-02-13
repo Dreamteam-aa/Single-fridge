@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
@@ -11,7 +12,7 @@ const MongoStore = require('connect-mongo')(session);
 const passport = require('passport');
 const flash = require("connect-flash");
 
-require('dotenv').config();
+
 require('./config/db.config');
 require('./config/passport.config').setup(passport);
 
