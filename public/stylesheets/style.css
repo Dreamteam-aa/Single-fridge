@@ -43,3 +43,8 @@ height: 75px;
 }
 
 .star-rating .fa-star{color: yellow;}
+
+.container{
+  background-color: darkgray;
+  position: fixed;
+}

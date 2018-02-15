@@ -24,6 +24,7 @@ exports.uploadDB = function (filePath,updatedProfile) {
                       "requested_visibility": "public"
               }
           };
+          fs.unlink(path);
           dbx.sharingCreateSharedLinkWithSettings(parameters)
           .then(response => {
               urlAux = response.url.split("/s");
