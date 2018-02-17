@@ -1,28 +1,30 @@
-  <div class="row">
-    <div class="col-xs-3 container">
+  <div class="row main-square">
+    <div class="col-xs-3 panel container-fluid profile">
       <div class="row">
           <div class="col-sm-2"></div>
-          <div class="col-sm-8 rounded mx-auto d-block" >
-                <% console.log(session.profileImg)%>
-                <% if( typeof(session.profileImg) != 'undefined' && session.profileImg ){%>
-                 <img class="profile-pic rounded" height="100" src="https://dl.dropboxusercontent.com/s<%= session.profileImg%>" alt="" />
+          <div class="col-sm-8 " >
+                <% if( typeof(user.profileImg) != 'undefined' && user.profileImg ){%>
+                 <img class="profile-pic" height="100" src="https://dl.dropboxusercontent.com/s<%= user.profileImg%>" alt="" />
               <% }%>
             </div>
-          <div class="col-sm-2"></div>
+         
       </div>
-      <div class="row">
+      <div class="row centered">
           <h3>User:</h3>
-          <%= session.username %>
+          <%= user.username %>
           <h4>About me:</h4>
-          <%= session.description %>
+          <%= user.description %>
       </div>
       <br><br>
       <div class="row">
-            <a class="btn btn-success" href="/user/edit/<%= session._id %>">Edit profile</a>
+            <a class="btn btn-success" href="/user/edit/<%= user._id %>">Edit profile</a>
           <a class="btn btn-success" href="/create">New recipe</a>
       </div>
     </div>
-    <div class="col-xs-9">
+        <div class="col-xs-1">
+        </div>
+        
+    <div class="col-xs-8">
       <h2>Recipes</h2>
       <% if(typeof(recipes) != 'undefined' && recipes.length > 0) { %>
       <div class="row">
@@ -52,18 +54,11 @@
                                   <% }); %>
                               </p>
                               <br>
-                          <div class="row">
-                              <div class="col-xs-12 col-md-8">
-                                  <p><strong>
-                                        <%= session.username %>
-                                  </strong></p>
-                              </div>
-                              <div class="col-xs-12 col-md-2">
-                                  <a class="btn btn-success" href="/edit/<%= recipe._id %>">Edit</a>
-                              </div>
-                              <div class="col-xs-12 col-md-2">
+                          <div class="horiz">
+                                <div class="horiz-btn">
+                                    <a class="btn btn-success" href="/edit/<%= recipe._id %>">Edit</a>
                                     <a class="btn btn-danger" href="/delete/<%= recipe._id %>">X</a>
-                              </div>
+                                </div>
                           </div>
                       </div>
                   </div>

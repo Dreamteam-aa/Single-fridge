@@ -6,8 +6,13 @@
     -webkit-border-radius: 0px;
     -moz-border-radius: 0px;
     border-radius: 0px;
+    
 }
-
+.item{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
 .item.list-group-item
 {
     float: none;
@@ -23,6 +28,11 @@
 .item.list-group-item .list-group-image
 {
     margin-right: 10px;
+    max-width: 100%;
+    height: 200px;
+    display: block;
+    object-fit: contain;
+
 }
 .item.list-group-item .thumbnail
 {

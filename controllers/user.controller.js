@@ -9,12 +9,13 @@ var prompt = require('prompt');
 const dbx = require ('../config/dropbox.config');
 
 module.exports.profile = (req, res, next) => {
-    Recipes.find({author: req.user._id})
+    Recipes.find({author: res.locals.session._id})
         .sort({ createdAt: -1 })
         .then((recipes) => {
             if( recipes.length > 0 ){
             res.render('user/profile', {
-                recipes: recipes
+                recipes: recipes,
+                user: res.locals.session
             });
             } else {
             res.render('user/profile',{

@@ -61,9 +61,9 @@ app.use((req, res, next) => {
   next();
 })
 
+app.use('/', recipes);
 app.use('/', auth);
 app.use('/', user);
-app.use('/',recipes);
 
 
 // catch 404 and forward to error handler
