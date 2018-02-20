@@ -204,7 +204,6 @@ res.render('recipes/searchapi');
             }
           })
           .then(function (response) {
-            console.log("heey");
             res.render('recipes/resultsapi', {
                 recipes: response.data.recipes
             });
