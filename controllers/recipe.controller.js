@@ -4,6 +4,7 @@ const Ingredient = require('../models/ingredient.model');
 const User = require('../models/user.model');
 const passport = require('passport');
 
+const axios = require('axios');
 
 const dbx = require ('../config/dropbox.config');
 
@@ -33,7 +34,6 @@ module.exports.showOne = (req, res, next) => {
 }
 
 module.exports.delete = (req, res, next) => {
-    console.log("ASDF");
     Recipe.findByIdAndRemove(req.params.id)
     .then((recipe) => {
          res.redirect('/profile');
@@ -191,6 +191,25 @@ module.exports.doCreate = (req, res, next) => {
         });
 }
 
+module.exports.searchRecipe = function (req, res, next) {
+res.render('recipes/searchapi');
 
-
+}
+    module.exports.findResults = function (req, res, next) {
+       console.log(req.body.ingredients)
+          axios.get("http://food2fork.com/api/search", {
+            params: {
+                key: "e1f52bc32f4918a287b8bf0e41d3d5bd",
+                q: req.body.ingredients
+            }
+          })
+          .then(function (response) {
+            res.render('recipes/resultsapi', {
+                recipes: response.data.recipes
+            });
+          })
+          .catch(function (error) {
+            next(error);
+          });
+        }
   
