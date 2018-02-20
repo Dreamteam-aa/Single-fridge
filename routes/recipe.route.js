@@ -22,7 +22,7 @@ const uploader = multer({ storage: storage });
 router.get('/', recipeController.show);
 
 router.get('/recipes/searchapi', recipeController.searchRecipe);
-router.get('/recipes/:id', recipeController.showOne);
+router.get('/recipes/recipe/:id', recipeController.showOne);
 
 router.get('/create', secure.isAuthenticated, recipeController.create);
 router.post('/search', recipeController.search);
@@ -33,7 +33,8 @@ router.post('/recipes/edit/:id', uploader.single('img'), recipeController.doEdit
 
 router.get('/delete/:id', recipeController.delete);
 
-router.post('/recipes/resultsapi', recipeController.findResults);
+router.get('/addapi', recipeController.searchRecipe);
+router.post('/resultsapi', recipeController.findResults);
 
 module.exports = router;
 
