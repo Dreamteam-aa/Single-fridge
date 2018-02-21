@@ -6,6 +6,8 @@
     -webkit-border-radius: 0px;
     -moz-border-radius: 0px;
     border-radius: 0px;
+    height: 40vh;
+    width: 30vw;
     
 }
 .item{
@@ -29,7 +31,6 @@
 {
     margin-right: 10px;
     max-width: 100%;
-    height: 200px;
     display: block;
     object-fit: contain;
 
@@ -38,6 +39,12 @@
 {
     margin-bottom: 0px;
 }
+
+.item .thumbnail .list-group-image
+{
+    height: 15vh !important;
+}
+
 .item.list-group-item .caption
 {
     padding: 9px 9px 0px 9px;

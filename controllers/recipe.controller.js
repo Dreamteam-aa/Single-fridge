@@ -195,21 +195,81 @@ module.exports.searchRecipe = function (req, res, next) {
 res.render('recipes/searchapi');
 
 }
-    module.exports.findResults = function (req, res, next) {
-       console.log(req.body.ingredients)
-          axios.get("http://food2fork.com/api/search", {
+
+
+module.exports.findResults = function (req, res, next) {
+       //console.log(req.body.ingredients)
+          axios.get("https://test-es.edamam.com/search?",{
             params: {
-                key: "e1f52bc32f4918a287b8bf0e41d3d5bd",
-                q: req.body.ingredients
+                q: req.body.ingredients,
+                app_id: "3fa5082a",
+                app_key: "3293e695ea7945afe407438a27f2f775"
             }
-          })
+            })
           .then(function (response) {
-            res.render('recipes/resultsapi', {
-                recipes: response.data.recipes
-            });
-          })
-          .catch(function (error) {
-            next(error);
-          });
-        }
-  
+            response.data.hits.forEach(element => {
+                console.log(element.recipe.label);
+                recipe = new Recipe({
+                    name: element.recipe.label,
+                    description: element.recipe.label,
+                    directions: element.recipe.ingredientLines,
+                    imgs: element.recipe.image,
+                    author: req.user._id,
+                    url: element.recipe.uri
+                   });
+                Recipe.findOne({ url: element.recipe.uri })
+                 .then(result => {
+                    if( result != null ){
+                        next();
+                    }else{
+                    recipe = new Recipe({
+                        name: element.recipe.label,
+                        description: element.recipe.label,
+                        directions: element.recipe.ingredientLines,
+                        imgs: element.recipe.image,
+                        author: req.user._id,
+                        url: element.recipe.uri
+                        });
+                    recipe.save()
+                     .then((savedRecipe) => {
+                         console.log(savedRecipe);
+                      //   dbx.uploadDB(img,savedRecipe._id);
+                         element.recipe.ingredients.forEach(elements => {
+                             ing = new Ingredient({
+                                 name: element.text
+                             });
+                           Ingredient.findOne({ name: elements.text })
+                             .then(ing => {
+                                 if (ing != null) {
+                                     Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: ing.name }}})
+                                             .then(() =>  next());
+                                     //next();
+                                 } else {
+                                     ing = new Ingredient({
+                                         name: elements.text
+                                     });
+                                     ing.save()
+                                     .then((savedIng) => {
+                                         Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: savedIng.name }}})
+                                             .then(() =>  next());
+                                     })
+                              }
+                             })
+                         });
+                         setTimeout(res.redirect("/profile"),10);
+                     })
+                    }
+                });
+                 
+            });  
+        }).catch(error => {
+            if (error instanceof mongoose.Error.ValidationError) {
+              res.render('recipe/new', {
+                recipe: recipe,
+                error: error.errors
+              });
+            } else {
+              next(error);
+            }
+          });    
+} 

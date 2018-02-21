@@ -1,7 +1,11 @@
 <div class="container">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="intro">
-                <img src="https://dl.dropboxusercontent.com/s<%= recipe.imgs%>" style="width:100%">
+                <% if( recipe.url ){%>
+                    <img src="<%= recipe.imgs%>" style="width:100%">
+                <% } else { %>
+                    <img src="https://dl.dropboxusercontent.com/s<%= recipe.imgs%>" style="width:100%">
+                <% } %>
                 <h1 class="main-title">
                     <%= recipe.name %>
                 </h1>
