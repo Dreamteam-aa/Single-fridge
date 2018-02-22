@@ -8,7 +8,7 @@ var prompt = require('prompt');
 
 const dbx = require ('../config/dropbox.config');
 
-module.exports.profile = (req, res, next) => {
+module.exports.showProfile = (req, res, next) => {
     Recipes.find({author: res.locals.session._id})
         .sort({ createdAt: -1 })
         .then((recipes) => {
@@ -26,6 +26,7 @@ module.exports.profile = (req, res, next) => {
         })
         .catch(error => next(error));
 }
+
 
 module.exports.list = (req, res, next) => {
     User.find({})
@@ -61,3 +62,21 @@ module.exports.doEdit = (req, res, next) => {
     });
 };
 
+module.exports.delete = (req, res, next) => {
+    const userId = req.params.id;
+    User.findByIdAndRemove(userId)
+    .then((user) => {
+        if (user != "null"){
+    
+         res.redirect('/user/list');
+        } 
+       }); 
+}
+
+module.exports.makeAdmin = (req, res, next) => {
+    const userId = req.params.id;
+    User.findByIdAndUpdate(userId, {role : "ADMIN"}).then((user) => {
+        res.redirect('/user/list');
+                
+    });
+}
