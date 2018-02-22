@@ -222,42 +222,45 @@ module.exports.findResults = function (req, res, next) {
                     if( result != null ){
                         next();
                     }else{
-                    recipe = new Recipe({
-                        name: element.recipe.label,
-                        description: element.recipe.label,
-                        directions: element.recipe.ingredientLines,
-                        imgs: element.recipe.image,
-                        author: req.user._id,
-                        url: element.recipe.uri
-                        });
-                    recipe.save()
-                     .then((savedRecipe) => {
-                         console.log(savedRecipe);
-                      //   dbx.uploadDB(img,savedRecipe._id);
-                         element.recipe.ingredients.forEach(elements => {
-                             ing = new Ingredient({
-                                 name: element.text
-                             });
-                           Ingredient.findOne({ name: elements.text })
-                             .then(ing => {
-                                 if (ing != null) {
-                                     Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: ing.name }}})
-                                             .then(() =>  next());
-                                     //next();
-                                 } else {
+                        if( element.recipe.image.length > 0 ){
+                            recipe = new Recipe({
+                                name: element.recipe.label,
+                                description: element.recipe.label,
+                                directions: element.recipe.ingredientLines,
+                                imgs: element.recipe.image,
+                                author: req.user._id,
+                                url: element.recipe.uri
+                                });
+                            recipe.save()
+                             .then((savedRecipe) => {
+                                 console.log(savedRecipe);
+                              //   dbx.uploadDB(img,savedRecipe._id);
+                                 element.recipe.ingredients.forEach(elements => {
                                      ing = new Ingredient({
-                                         name: elements.text
+                                         name: element.text
                                      });
-                                     ing.save()
-                                     .then((savedIng) => {
-                                         Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: savedIng.name }}})
-                                             .then(() =>  next());
+                                   Ingredient.findOne({ name: elements.text })
+                                     .then(ing => {
+                                         if (ing != null) {
+                                             Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: ing.name }}})
+                                                     .then(() =>  next());
+                                             //next();
+                                         } else {
+                                             ing = new Ingredient({
+                                                 name: elements.text
+                                             });
+                                             ing.save()
+                                             .then((savedIng) => {
+                                                 Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: savedIng.name }}})
+                                                     .then(() =>  next());
+                                             })
+                                      }
                                      })
-                              }
+                                 });
+                                 setTimeout(res.redirect("/profile"),10);
                              })
-                         });
-                         setTimeout(res.redirect("/profile"),10);
-                     })
+                        }
+                    
                     }
                 });
                  
