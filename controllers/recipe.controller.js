@@ -128,6 +128,63 @@ module.exports.search = (req, res, next) => {
         .catch(error => next(error));
 }
 
+module.exports.search2 = (req, res, next) => {
+    var finalRecipes = [];
+    var ingredients = req.body.ingredients.split(",");
+    Recipe.find()
+        .then(recipes => {
+            if( recipes.length > 0 ){
+                recipes.forEach(recipe => {
+                    valuesFound = true;
+                    count=0;
+                    ingredients.forEach(ing => {
+                        recipe.ingredients.forEach(recipeing =>{
+                            ingr = recipeing.ingredient;
+                            if ( ingr.indexOf(ing)>0 ){
+                                count++;
+                             //   recipe.ingredients.length = 0;
+                            }
+                        });
+                        if(count<ingredients.length){
+                            valuesFound = false;
+                        }else{
+                            valuesFound = true;
+                        }
+                    });
+                    
+                    if ( valuesFound == true ){
+                //        console.log(recipe);
+                        finalRecipes.push(recipe);
+                    }
+                });
+            if( finalRecipes.length > 0 ){
+                res.render('recipes/search', {
+                    recipes: finalRecipes,
+                    ingredients: ingredients
+                    });
+            } else {
+                res.render('recipes/search', {
+                    recipes: finalRecipes,
+                    ingredients: ingredients,
+                    errors: {
+                        text: "We could not find any recipes including these ingredients."
+                    } 
+                    });
+            }
+                
+            } else {
+                res.render('recipes/search', {
+                    recipes: recipes,
+                    ingredients: ingredients,
+                    errors: {
+                        text: "We could not find any recipes including these ingredients."
+                    } 
+                    });
+            }
+        })
+        .catch(error => next(error));
+}
+
 module.exports.create = (req, res, next) => {
     res.render('recipes/new'); 
 }

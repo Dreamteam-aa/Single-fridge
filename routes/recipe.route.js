@@ -25,7 +25,7 @@ router.get('/recipes/searchapi', recipeController.searchRecipe);
 router.get('/recipes/recipe/:id', recipeController.showOne);
 
 router.get('/create', secure.isAuthenticated, recipeController.create);
-router.post('/search', recipeController.search);
+router.post('/search', recipeController.search2);
 router.post('/recipes/create', uploader.single('img'), recipeController.doCreate);
 
 router.get('/edit/:id', secmiddleware.isAuthor, recipeController.edit);
