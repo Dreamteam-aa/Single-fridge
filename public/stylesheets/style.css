@@ -69,8 +69,14 @@ justify-content: center;
   overflow: hidden;
   flex-direction:row;
   justify-content: center;
+  padding-bottom: 100%;
 }
 
 .main-square{
   display: flex;
+}
+.Absolute-Center {
+  margin: auto;
+  position: absolute;
+  top: 40%; left: 40%; bottom: 0; right: 0;
 }

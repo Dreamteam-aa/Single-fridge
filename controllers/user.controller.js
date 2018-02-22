@@ -19,12 +19,12 @@ module.exports.profile = (req, res, next) => {
             });
             } else {
             res.render('user/profile',{
-                recipes: recipes
+                recipes: recipes,
+                user: res.locals.session
             });
              }
         })
         .catch(error => next(error));
-    
 }
 
 module.exports.list = (req, res, next) => {

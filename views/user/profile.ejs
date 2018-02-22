@@ -3,9 +3,13 @@
       <div class="row">
           <div class="col-sm-2"></div>
           <div class="col-sm-8 " >
+
                 <% if( typeof(user.profileImg) != 'undefined' && user.profileImg ){%>
                  <img class="profile-pic" height="100" src="https://dl.dropboxusercontent.com/s<%= user.profileImg%>" alt="" />
-              <% }%>
+            
+               <% } else { %>
+                <img class="profile-pic" height="100"  src="https://www.thesourcepartnership.com/wp-content/uploads/2017/05/facebook-default-no-profile-pic-300x300.jpg" alt="" />
+                <% } %>
             </div>
          
       </div>
@@ -71,6 +75,11 @@
               <% }); %>
           </div>
       </div>      
-      <% } %>
+      <% } else { %>
+       <h3> Hey! add some recipes</h3> <br>   <a class="btn btn-success" href="/create">New recipe</a>
+       <br>
+       <br>
+        <img  height="450"  src="https://media.giphy.com/media/3o7bu7Xzqkq8K3MsUg/giphy.gif" alt="" />
+        <% } %>
     </div>
   </div>
