@@ -130,7 +130,7 @@ module.exports.search = (req, res, next) => {
 
 module.exports.search2 = (req, res, next) => {
     var finalRecipes = [];
-    var ingredients = req.body.ingredients.split(",");
+    var ingredients = req.body.ingredients.replace(/^\s*|\s*$/g,'').split(",");
     Recipe.find()
         .then(recipes => {
             if( recipes.length > 0 ){
@@ -140,7 +140,7 @@ module.exports.search2 = (req, res, next) => {
                     ingredients.forEach(ing => {
                         recipe.ingredients.forEach(recipeing =>{
                             ingr = recipeing.ingredient;
-                            if ( ingr.indexOf(ing)>0 ){
+                            if ( ingr.indexOf(ing)>-1 ){
                                 count++;
                              //   recipe.ingredients.length = 0;
                             }
@@ -280,6 +280,7 @@ module.exports.findResults = function (req, res, next) {
                         next();
                     }else{
                         if( element.recipe.image.length > 0 ){
+
                             recipe = new Recipe({
                                 name: element.recipe.label,
                                 description: element.recipe.label,

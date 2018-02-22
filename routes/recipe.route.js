@@ -17,8 +17,6 @@ var storage = multer.diskStorage({
   
 const uploader = multer({ storage: storage });
 
-
-
 router.get('/', recipeController.show);
 
 router.get('/recipes/searchapi', recipeController.searchRecipe);
