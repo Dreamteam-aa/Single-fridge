@@ -19,7 +19,7 @@
                       <ul class="nav navbar-nav">
                           <li><a href="/profile"> @<%= session.username %> </a></li>
                           <% if (session.role === 'ADMIN') { %>
-                              <li><a href="/users">Users</a></li>
+                              <li><a href="/user/list">Users</a></li>
                           <% } %>
                       </ul>
                       <ul class="nav navbar-nav">
