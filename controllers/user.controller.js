@@ -95,6 +95,20 @@ module.exports.addFav = (req,res,next) => {
 
 }
 
+module.exports.unFav = (req,res,next) => {
+    const userId = req.user._id;
+    User.findByIdAndUpdate(userId, { $pull: {
+        favorites: req.body.id
+    }
+    })
+    .then(user => {
+        console.log(user);
+        res.redirect("/recipes/recipe/"+req.body.id);
+    })
+    .catch(error => next(error));
+
+}
+
 module.exports.showFavs = (req,res,next) => {
     const userId = req.user._id;
     recipe = new Recipe({

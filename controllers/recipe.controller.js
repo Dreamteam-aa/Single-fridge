@@ -35,10 +35,16 @@ module.exports.showOne = (req, res, next) => {
             average = 0;
         }
          console.log(average);
-         res.render('recipes/showOne', {
-           recipe: recipe,
-           rating: average
-         });
+         User.findById(req.user._id)
+         .then(user => {
+            res.render('recipes/showOne', {
+                recipe: recipe,
+                rating: average,
+                favorites: user.favorites
+              });
+         })
+         .catch(error => next(error));
+         
        }); 
 }
 

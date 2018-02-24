@@ -9,6 +9,14 @@ body {
 a {
   color: #00B7FF;
 }
+.heartless{
+  max-width: 100%;
+  height: auto;
+}
+.fridge{
+max-width: 200%;
+height: auto;
+}
 .navrow{
   background-color: white;
 }
@@ -309,7 +317,12 @@ border-radius: 4px;
 .heart:hover::after, .heart:hover::before{
     background: #fc2e5a;
 }
-
+.heart.selected:after, .heart.selected:before {
+  background: #fc2e5a;
+}
+.heart.selected:hover::after, .heart.selected:hover::before {
+  background: grey;
+}
 
 #hidden{
   visibility: hidden

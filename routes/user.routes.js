@@ -28,6 +28,7 @@ router.get('/user/delete/:id', userController.delete);
 
 router.get('/user/admin/:id', secmiddleware.isAdmin, userController.makeAdmin);
 router.post('/recipe/fav', secure.isAuthenticated, userController.addFav);
+router.post('/recipe/unfav', secure.isAuthenticated, userController.unFav);
 router.get('/user/favs', secure.isAuthenticated, userController.showFavs);
 
 module.exports = router;
