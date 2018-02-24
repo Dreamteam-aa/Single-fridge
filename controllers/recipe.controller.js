@@ -383,6 +383,8 @@ module.exports.rate = (req,res,next) => {
 
 } 
 
+
+
 function RemoveAccents(strAccents) {
     var strAccents = strAccents.split('');
     var strAccentsOut = new Array();

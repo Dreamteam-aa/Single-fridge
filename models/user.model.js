@@ -13,8 +13,8 @@ const userSchema = new mongoose.Schema({
 profileImg: {
   type: String
 },
-  description: String,
-  recipes: {
+description: String,
+recipes: {
     type: [
         {
             type: mongoose.Schema.Types.ObjectId,
@@ -22,12 +22,18 @@ profileImg: {
         }
     ],
     default: []
-  },
-  role: {
+},
+role: {
     type: String,
     enum : ['USER', 'ADMIN'],
     default : 'USER'
-  }
+},
+favorites: {
+    type: [
+        {
+            type: String
+        }
+    ]}
 }, { timestamps: true });
 
 

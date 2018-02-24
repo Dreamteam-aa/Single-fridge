@@ -28,11 +28,20 @@
     var onStar = $('#rating').text(); // The star currently mouse on
     var stars = $('#stars li');
     var stars2 = $('#stars2 li');
-    $('#rating').text(23);
+
+    
+
     for (i = 0; i < onStar; i++) {
       $(stars[i]).addClass('selected');
       $(stars2[i]).addClass('selected');
     }
+    $('#heart::after').on('mouseover', function(){
+        $(this).addClass('selected');
+    });
+    $('#heart::before').on('mouseover', function(){
+        $(this).addClass('selected');
+    });
+    
   /* 1. Visualizing things on Hover - See next part for action on click */
   $('#stars li').on('mouseover', function(){
     var onStar = parseInt($(this).data('value'), 10); // The star currently mouse on
@@ -77,6 +86,7 @@
         msg = "We will improve ourselves. You rated this " + ratingValue + " stars.";
     }
     $('input[name=ratingVal]').val(ratingValue);
+    
     responseMessage(msg);
   });
 });

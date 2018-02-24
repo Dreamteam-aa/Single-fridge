@@ -36,5 +36,6 @@ router.get('/resultsapi', recipeController.findResults);
 router.post('/resultsapi', recipeController.findResults);
 
 router.post('/recipe/rate', secure.isAuthenticated, recipeController.rate);
+
 module.exports = router;
 

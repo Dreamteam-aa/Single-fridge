@@ -1,5 +1,5 @@
 const User = require('../models/user.model');
-const Recipes = require('../models/recipe.model');
+const Recipe = require('../models/recipe.model');
 var Dropbox = require('dropbox').Dropbox;
 require('isomorphic-fetch');
 var fs = require('fs');
@@ -9,7 +9,7 @@ var prompt = require('prompt');
 const dbx = require ('../config/dropbox.config');
 
 module.exports.showProfile = (req, res, next) => {
-    Recipes.find({author: res.locals.session._id})
+    Recipe.find({author: res.locals.session._id})
         .sort({ createdAt: -1 })
         .then((recipes) => {
             if( recipes.length > 0 ){
@@ -79,4 +79,45 @@ module.exports.makeAdmin = (req, res, next) => {
         res.redirect('/user/list');
                 
     });
+}
+
+module.exports.addFav = (req,res,next) => {
+    const userId = req.user._id;
+    User.findByIdAndUpdate(userId, { $push: {
+        favorites: req.body.id
+    }
+    })
+    .then(user => {
+        console.log(user);
+        res.redirect("/recipes/recipe/"+req.body.id);
+    })
+    .catch(error => next(error));
+
+}
+
+module.exports.showFavs = (req,res,next) => {
+    const userId = req.user._id;
+    recipe = new Recipe({
+        id: req.body.id
+        });
+    User.findById(userId)
+    .then(user => {
+        console.log(user.recipes);
+        Recipe.find( { '_id':{ $in : user.favorites} })
+        .then(recipes => {
+            if( recipes.length > 0 ){
+                console.log("ASDF");
+                res.render('recipes/favs', {
+                recipes: recipes
+                });
+            } else {
+                res.render('recipes/favs', {
+                    recipes: recipes 
+                    });
+            }
+        })
+        .catch(error => next(error));
+    })
+    .catch(error => next(error));
+
 }

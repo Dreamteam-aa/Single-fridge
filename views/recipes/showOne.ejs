@@ -8,9 +8,19 @@
                 <% } else { %>
                     <img src="https://dl.dropboxusercontent.com/s<%= recipe.imgs%>" style="width:100%">
                 <% } %>
-                <h1 class="main-title">
-                    <%= recipe.name %>
-                </h1>
+                
+                <div class="title-fav">
+                        <h1 class="main-title">
+                                <%= recipe.name %>
+                        </h1>
+                
+                        <form method="post" action="/recipe/fav">
+                            <input type="text" name="id" class="hidden" value="<%= recipe._id %>"></input>
+                            <button type="submit" class="heart"></button>
+                        </form>
+                </div>
+                    
+                
         </div>
         <div class="body-text">
                 <br>

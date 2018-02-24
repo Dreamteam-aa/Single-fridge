@@ -23,6 +23,7 @@
       <div class="row">
             <a class="btn btn-success" href="/user/edit/<%= user._id %>">Edit profile</a>
           <a class="btn btn-success" href="/create">New recipe</a>
+          <a class="btn btn-success" href="/user/favs">Show Favs</a>
           <% if (session.role === 'ADMIN') { %>
           <a class="btn btn-success" href="/addapi">Add API recipe</a>
           <% } %>
