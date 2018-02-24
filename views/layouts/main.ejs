@@ -27,10 +27,11 @@
     $(document).ready(function(){
     var onStar = $('#rating').text(); // The star currently mouse on
     var stars = $('#stars li');
+    var stars2 = $('#stars2 li');
     $('#rating').text(23);
     for (i = 0; i < onStar; i++) {
-      $('#rating').text(234234);
       $(stars[i]).addClass('selected');
+      $(stars2[i]).addClass('selected');
     }
   /* 1. Visualizing things on Hover - See next part for action on click */
   $('#stars li').on('mouseover', function(){

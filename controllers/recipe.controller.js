@@ -140,7 +140,7 @@ module.exports.search = (req, res, next) => {
 module.exports.search2 = (req, res, next) => {
     var finalRecipes = [];
     var ingredientsArray = req.body.ingredients.replace(/^\s*|\s*$/g,'').split(",");
-    const ingredients = ingredientsArray.map(string => string.trim())
+    const ingredients = ingredientsArray.map(string => string.trim().toLowerCase())
     Recipe.find()
         .populate('author')
         .then(recipes => {
@@ -171,12 +171,12 @@ module.exports.search2 = (req, res, next) => {
             if( finalRecipes.length > 0 ){
                 res.render('recipes/search', {
                     recipes: finalRecipes,
-                    ingredients: ingredients
+                    ingredients: ingredientsArray
                     });
             } else {
                 res.render('recipes/search', {
                     recipes: finalRecipes,
-                    ingredients: ingredients,
+                    ingredients: ingredientsArray,
                     errors: {
                         text: "We could not find any recipes including these ingredients."
                     } 
@@ -306,9 +306,7 @@ module.exports.findResults = function (req, res, next) {
                    });
                 Recipe.findOne({ url: element.recipe.uri })
                  .then(result => {
-                    if( result != null ){
-                        next();
-                    }else{
+                    if( result == null ){
                         if( element.recipe.image.length > 0 ){
                             recipe = new Recipe({
                                 name: element.recipe.label,
@@ -320,10 +318,12 @@ module.exports.findResults = function (req, res, next) {
                                 });
                             recipe.save()
                              .then((savedRecipe) => {
-                                 console.log(savedRecipe);
                               //   dbx.uploadDB(img,savedRecipe._id);
                                  element.recipe.ingredients.forEach(elements => {
                                      cleanIng = RemoveAccents(elements.text.toString());
+                                     if ( cleanIng.length > 30 ){
+                                         cleanIng = cleanIng.substr(0,30);
+                                     }
                                      ing = new Ingredient({
                                          name: cleanIng
                                      });
@@ -332,11 +332,14 @@ module.exports.findResults = function (req, res, next) {
                                          if (ing != null) {
                                              name = ing.name.toString().toLowerCase();
                                              Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: name }}})
-                                                     .then(() =>  next());
+                                                     .then(() =>  next())
+                                                     .catch(error => next());
                                              //next();
                                          } else {
-                                             console.log(RemoveAccents(elements.text.toString()));
                                              name = RemoveAccents(elements.text.toString()).toLowerCase();
+                                             if( name.length > 30 ){
+                                                 name = name.substr(0,30);
+                                             }
                                              ing = new Ingredient({
                                                  name: name
                                              });
@@ -349,11 +352,11 @@ module.exports.findResults = function (req, res, next) {
                                      })
                                  });
                                  setTimeout(res.redirect("/profile"),10);
-                             })
+                             }).catch(error => next(error));
                         }
                     
                     }
-                });
+                }).catch(error => next(error));
                  
             });  
         }).catch(error => {

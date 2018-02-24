@@ -32,6 +32,7 @@ router.post('/recipes/edit/:id', uploader.single('img'), recipeController.doEdit
 router.get('/delete/:id', recipeController.delete);
 
 router.get('/addapi', recipeController.searchRecipe);
+router.get('/resultsapi', recipeController.findResults);
 router.post('/resultsapi', recipeController.findResults);
 
 router.post('/recipe/rate', secure.isAuthenticated, recipeController.rate);

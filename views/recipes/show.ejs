@@ -42,7 +42,7 @@
                     <h4 class="group inner list-group-item-heading">
                         <%= recipe.name %></h4>
                         <p class="group inner list-group-item-text">
-                            <% if ( recipe.ingredients.length < 4 ) { %>
+                            <% if ( recipe.ingredients.length < 3 ) { %>
                             <% recipe.ingredients.forEach(ingredient => { %>
                                   <%= ingredient.ingredient %>  
                             <% }) %>

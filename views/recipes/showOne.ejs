@@ -32,33 +32,58 @@
                     </p>
                 </section>
                 <section>
-                    <form method="post" action="/recipe/rate">
-                    <section class='rating-widget'>
-                        <!-- Rating Stars Box -->
-                        <div class='rating-stars text-center'>
-                        <ul id='stars'>
-                            <li class='star' title='Poor' data-value='1'>
-                            <i class='fa fa-star fa-fw'></i>
-                            </li>
-                            <li class='star' title='Fair' data-value='2'>
-                            <i class='fa fa-star fa-fw'></i>
-                            </li>
-                            <li class='star' title='Good' data-value='3'>
-                            <i class='fa fa-star fa-fw'></i>
-                            </li>
-                            <li class='star' title='Excellent' data-value='4'>
-                            <i class='fa fa-star fa-fw'></i>
-                            </li>
-                            <li class='star' title='WOW!!!' data-value='5'>
-                            <i class='fa fa-star fa-fw'></i>
-                            </li>
-                        </ul>
-                        <input type="text" name="id" class="hidden" value="<%= recipe._id %>"></input>
-                        <input type="text" name="ratingVal" class="hidden"></input>
-                        <button type="submit" class="btn btn-primary">Send Rating</button>
-                        </div>
-                    </section>
-                </form>            
+                    <% if (typeof(session.username) !== 'undefined') { %>
+                        <form method="post" action="/recipe/rate">
+                        <section class='rating-widget'>
+                            <!-- Rating Stars Box -->
+                            <div class='rating-stars text-center'>
+                            <ul id='stars'>
+                                <li class='star' title='Poor' data-value='1'>
+                                <i class='fa fa-star fa-fw'></i>
+                                </li>
+                                <li class='star' title='Fair' data-value='2'>
+                                <i class='fa fa-star fa-fw'></i>
+                                </li>
+                                <li class='star' title='Good' data-value='3'>
+                                <i class='fa fa-star fa-fw'></i>
+                                </li>
+                                <li class='star' title='Excellent' data-value='4'>
+                                <i class='fa fa-star fa-fw'></i>
+                                </li>
+                                <li class='star' title='WOW!!!' data-value='5'>
+                                <i class='fa fa-star fa-fw'></i>
+                                </li>
+                            </ul>
+                                <input type="text" name="id" class="hidden" value="<%= recipe._id %>"></input>
+                                <input type="text" name="ratingVal" class="hidden"></input>
+                                <button type="submit" class="btn btn-primary">Send Rating</button>
+                            </div>
+                        </section>
+                    </form>
+                    <% } else {%>
+                        <section class='rating-widget'>
+                                <!-- Rating Stars Box -->
+                                <div class='rating-stars text-center'>
+                                <ul id='stars2'>
+                                    <li class='star2' title='Poor' data-value='1'>
+                                    <i class='fa fa-star fa-fw'></i>
+                                    </li>
+                                    <li class='star2' title='Fair' data-value='2'>
+                                    <i class='fa fa-star fa-fw'></i>
+                                    </li>
+                                    <li class='star2' title='Good' data-value='3'>
+                                    <i class='fa fa-star fa-fw'></i>
+                                    </li>
+                                    <li class='star2' title='Excellent' data-value='4'>
+                                    <i class='fa fa-star fa-fw'></i>
+                                    </li>
+                                    <li class='star2' title='WOW!!!' data-value='5'>
+                                    <i class='fa fa-star fa-fw'></i>
+                                    </li>
+                                </ul>
+                                </div>
+                            </section>   
+                    <% } %>         
                 </section>
         </div>
     </div>
