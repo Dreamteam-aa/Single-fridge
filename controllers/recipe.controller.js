@@ -141,6 +141,7 @@ module.exports.search2 = (req, res, next) => {
     var finalRecipes = [];
     var ingredients = req.body.ingredients.replace(/^\s*|\s*$/g,'').split(",");
     Recipe.find()
+        .populate('author')
         .then(recipes => {
             if( recipes.length > 0 ){
                 recipes.forEach(recipe => {
