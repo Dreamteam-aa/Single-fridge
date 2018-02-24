@@ -321,8 +321,8 @@ module.exports.findResults = function (req, res, next) {
                               //   dbx.uploadDB(img,savedRecipe._id);
                                  element.recipe.ingredients.forEach(elements => {
                                      cleanIng = RemoveAccents(elements.text.toString());
-                                     if ( cleanIng.length > 30 ){
-                                         cleanIng = cleanIng.substr(0,30);
+                                     if ( cleanIng.length > 35 ){
+                                         cleanIng = cleanIng.substr(0,35);
                                      }
                                      ing = new Ingredient({
                                          name: cleanIng
@@ -337,8 +337,8 @@ module.exports.findResults = function (req, res, next) {
                                              //next();
                                          } else {
                                              name = RemoveAccents(elements.text.toString()).toLowerCase();
-                                             if( name.length > 30 ){
-                                                 name = name.substr(0,30);
+                                             if( name.length > 35 ){
+                                                 name = name.substr(0,35);
                                              }
                                              ing = new Ingredient({
                                                  name: name
