@@ -11,7 +11,7 @@ const recipeSchema = new mongoose.Schema({
     },
     directions: {
         type: String,
-        required: [true, 'Description is required']
+        required: [true, 'Directions are required']
     },
     ingredients: {
         type: [{

@@ -139,7 +139,8 @@ module.exports.search = (req, res, next) => {
 
 module.exports.search2 = (req, res, next) => {
     var finalRecipes = [];
-    var ingredients = req.body.ingredients.replace(/^\s*|\s*$/g,'').split(",");
+    var ingredientsArray = req.body.ingredients.replace(/^\s*|\s*$/g,'').split(",");
+    const ingredients = ingredientsArray.map(string => string.trim())
     Recipe.find()
         .populate('author')
         .then(recipes => {
@@ -203,15 +204,33 @@ module.exports.doCreate = (req, res, next) => {
     ingredients = req.body.ingredients.split(",");
     recipes = req.body.name;
     img = req.file ? req.file.filename : '';
-    recipe = new Recipe({
+    const recipe = new Recipe({
        name: req.body.name,
        description: req.body.description,
        author: req.user._id,
        directions: req.body.directions
       });
+    if( req.body.ingredients.length == 0){
+        var errorIng = {
+            ingredients: 'Ingredients are required'
+        }
+        if ( req.body.name.length == 0){
+            errorIng.name = "Name is required";
+        }
+        if ( req.body.description.length == 0){
+            errorIng.description = "Description is required";
+        }
+        if (req.body.directions.length == 0){
+            errorIng.directions = "Directions are required";
+        }
+        console.log(errorIng);
+        res.render('recipes/new', {
+            recipe: recipe,
+            error: errorIng
+          });
+    } else {
     recipe.save()
         .then((savedRecipe) => {
-            console.log(savedRecipe);
             dbx.uploadDB(img,savedRecipe._id);
             ingredients.forEach(element => {
                 ing = new Ingredient({
@@ -235,7 +254,7 @@ module.exports.doCreate = (req, res, next) => {
                         .catch(error => {
                             if (error instanceof mongoose.Error.ValidationError) {
                                 res.render('recipes/new', { 
-                                    recipes: recipes,
+                                    recipe: recipe,
                                     error: error.errors 
                                 });
                             } else {
@@ -248,14 +267,16 @@ module.exports.doCreate = (req, res, next) => {
             setTimeout(res.redirect("/profile"),10);
         }).catch(error => {
           if (error instanceof mongoose.Error.ValidationError) {
-            res.render('recipe/new', {
-              recipe: recipe,
-              error: error.errors
-            });
+            req.flash('Recipe', recipe);
+                res.render('recipes/new', { 
+                    recipe: recipe,
+                    error: error.errors 
+                });
           } else {
             next(error);
           }
         });
+    }
 }
 
 module.exports.searchRecipe = function (req, res, next) {
@@ -275,7 +296,6 @@ module.exports.findResults = function (req, res, next) {
             })
           .then(function (response) {
             response.data.hits.forEach(element => {
-                console.log(element.recipe.label);
                 recipe = new Recipe({
                     name: element.recipe.label,
                     description: element.recipe.label,
@@ -303,10 +323,11 @@ module.exports.findResults = function (req, res, next) {
                                  console.log(savedRecipe);
                               //   dbx.uploadDB(img,savedRecipe._id);
                                  element.recipe.ingredients.forEach(elements => {
+                                     cleanIng = RemoveAccents(elements.text.toString());
                                      ing = new Ingredient({
-                                         name: element.text
+                                         name: cleanIng
                                      });
-                                   Ingredient.findOne({ name: elements.text })
+                                   Ingredient.findOne({ name: cleanIng })
                                      .then(ing => {
                                          if (ing != null) {
                                              name = ing.name.toString().toLowerCase();
@@ -314,7 +335,8 @@ module.exports.findResults = function (req, res, next) {
                                                      .then(() =>  next());
                                              //next();
                                          } else {
-                                             name = elements.text.toString().toLowerCase();
+                                             console.log(RemoveAccents(elements.text.toString()));
+                                             name = RemoveAccents(elements.text.toString()).toLowerCase();
                                              ing = new Ingredient({
                                                  name: name
                                              });
@@ -336,7 +358,7 @@ module.exports.findResults = function (req, res, next) {
             });  
         }).catch(error => {
             if (error instanceof mongoose.Error.ValidationError) {
-              res.render('recipe/new', {
+              res.render('recipes/new', {
                 recipe: recipe,
                 error: error.errors
               });
@@ -347,15 +369,29 @@ module.exports.findResults = function (req, res, next) {
 } 
 
 module.exports.rate = (req,res,next) => {
-   // console.log(Number(req.body.ratingVal));
     Recipe.findByIdAndUpdate(req.body.id, { $push: {
         rating: Number(req.body.ratingVal)
     }
     })
     .then(recipe => {
-        console.log(recipe.rating);
         res.redirect("/recipes/recipe/"+req.body.id);
     })
     .catch(error => next());
 
 } 
+
+function RemoveAccents(strAccents) {
+    var strAccents = strAccents.split('');
+    var strAccentsOut = new Array();
+    var strAccentsLen = strAccents.length;
+    var accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüŠšŸÿýŽž';
+    var accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuSsYyyZz";
+    for (var y = 0; y < strAccentsLen; y++) {
+        if (accents.indexOf(strAccents[y]) != -1) {
+            strAccentsOut[y] = accentsOut.substr(accents.indexOf(strAccents[y]), 1);
+        } else
+            strAccentsOut[y] = strAccents[y];
+    }
+    strAccentsOut = strAccentsOut.join('');
+    return strAccentsOut;
+}
