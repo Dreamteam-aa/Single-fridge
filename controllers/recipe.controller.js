@@ -26,9 +26,18 @@ module.exports.show = (req, res, next) => {
 }
 
 module.exports.showOne = (req, res, next) => {
-    Recipe.findById(req.params.id).then((recipe) => {
+    Recipe.findById(req.params.id).then((recipe) => { 
+        if( recipe.rating.length > 0 ){
+            var sum = recipe.rating.reduce((x, y) => x + y);
+            average = Math.round(sum/recipe.rating.length);
+            
+        } else {
+            average = 0;
+        }
+         console.log(average);
          res.render('recipes/showOne', {
-           recipe: recipe
+           recipe: recipe,
+           rating: average
          });
        }); 
 }
@@ -280,7 +289,6 @@ module.exports.findResults = function (req, res, next) {
                         next();
                     }else{
                         if( element.recipe.image.length > 0 ){
-
                             recipe = new Recipe({
                                 name: element.recipe.label,
                                 description: element.recipe.label,
@@ -300,18 +308,20 @@ module.exports.findResults = function (req, res, next) {
                                    Ingredient.findOne({ name: elements.text })
                                      .then(ing => {
                                          if (ing != null) {
-                                             Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: ing.name }}})
+                                             name = ing.name.toString().toLowerCase();
+                                             Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: name }}})
                                                      .then(() =>  next());
                                              //next();
                                          } else {
+                                             name = elements.text.toString().toLowerCase();
                                              ing = new Ingredient({
-                                                 name: elements.text
+                                                 name: name
                                              });
                                              ing.save()
                                              .then((savedIng) => {
                                                  Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: savedIng.name }}})
                                                      .then(() =>  next());
-                                             })
+                                             }).catch(error => next());
                                       }
                                      })
                                  });
@@ -333,4 +343,18 @@ module.exports.findResults = function (req, res, next) {
               next(error);
             }
           });    
+} 
+
+module.exports.rate = (req,res,next) => {
+   // console.log(Number(req.body.ratingVal));
+    Recipe.findByIdAndUpdate(req.body.id, { $push: {
+        rating: Number(req.body.ratingVal)
+    }
+    })
+    .then(recipe => {
+        console.log(recipe.rating);
+        res.redirect("/recipes/recipe/"+req.body.id);
+    })
+    .catch(error => next());
+
 } 

@@ -34,5 +34,6 @@ router.get('/delete/:id', recipeController.delete);
 router.get('/addapi', recipeController.searchRecipe);
 router.post('/resultsapi', recipeController.findResults);
 
+router.post('/recipe/rate', secure.isAuthenticated, recipeController.rate);
 module.exports = router;
 
