@@ -26,7 +26,7 @@ router.get('/user/list',secure.isAuthenticated, userController.list);
 
 router.get('/user/delete/:id', userController.delete);
 
-router.get('/user/admin/:id', userController.makeAdmin);
+router.get('/user/admin/:id', secmiddleware.isAdmin, userController.makeAdmin);
 router.post('/recipe/fav', secure.isAuthenticated, userController.addFav);
 router.get('/user/favs', secure.isAuthenticated, userController.showFavs);
 

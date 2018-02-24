@@ -306,9 +306,11 @@ border-radius: 4px;
        -o-transform-origin: 100% 100%;
           transform-origin :100% 100%;
 }
-.heart:after.selected,.heart:before.selected{
-  background: #fc2e5a;
+.heart:hover::after, .heart:hover::before{
+    background: #fc2e5a;
 }
+
+
 #hidden{
   visibility: hidden
 }

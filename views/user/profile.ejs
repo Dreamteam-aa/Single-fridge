@@ -25,6 +25,7 @@
           <a class="btn btn-success" href="/create">New recipe</a>
           <a class="btn btn-success" href="/user/favs">Show Favs</a>
           <% if (session.role === 'ADMIN') { %>
+          <br><br>
           <a class="btn btn-success" href="/addapi">Add API recipe</a>
           <% } %>
       </div>
