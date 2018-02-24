@@ -15,7 +15,7 @@
                         </h1>
                 
                          
-                            <% if( favorites.indexOf(recipe.id) < 0 ){ %>
+                            <% if( favorites.indexOf(recipe._id) < 0 ){ %>
                             <form method="post" action="/recipe/fav">
                                 <input type="text" name="id" class="hidden" value="<%= recipe._id %>"></input>
                                 <button type="submit" class="heart"></button>
