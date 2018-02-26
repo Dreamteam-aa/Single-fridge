@@ -47,7 +47,7 @@ module.exports.showOne = (req, res, next) => {
          })
          .catch(error => next(error));
          
-       }); 
+       }).catch(error => next(error));
 }
 
 module.exports.delete = (req, res, next) => {
