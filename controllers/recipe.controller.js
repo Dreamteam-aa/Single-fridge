@@ -3,6 +3,8 @@ const Recipe = require('../models/recipe.model');
 const Ingredient = require('../models/ingredient.model');
 const User = require('../models/user.model');
 const passport = require('passport');
+var request = require('request');
+var rp = require('request-promise');
 
 const axios = require('axios');
 
@@ -190,6 +192,7 @@ module.exports.search2 = (req, res, next) => {
             }
                 
             } else {
+                
                 res.render('recipes/search', {
                     recipes: recipes,
                     ingredients: ingredients,
@@ -375,6 +378,92 @@ module.exports.findResults = function (req, res, next) {
               next(error);
             }
           });    
+} 
+
+module.exports.findResults2 = function (req, res, next) {
+    //console.log(req.body.ingredients)
+       axios.get("https://test-es.edamam.com/search?",{
+         params: {
+             q: req.body.ingredients,
+             app_id: "3fa5082a",
+             app_key: "3293e695ea7945afe407438a27f2f775"
+         }
+         })
+       .then(function (response) {
+         response.data.hits.forEach(element => {
+             recipe = new Recipe({
+                 name: element.recipe.label,
+                 description: element.recipe.label,
+                 directions: element.recipe.ingredientLines,
+                 imgs: element.recipe.image,
+                 author: req.user._id,
+                 url: element.recipe.uri
+                });
+             Recipe.findOne({ url: element.recipe.uri })
+              .then(result => {
+                 if( result == null ){
+                     if( element.recipe.image.length > 0 ){
+                         recipe = new Recipe({
+                             name: element.recipe.label,
+                             description: element.recipe.label,
+                             directions: element.recipe.ingredientLines,
+                             imgs: element.recipe.image,
+                             author: req.user._id,
+                             url: element.recipe.uri
+                             });
+                         recipe.save()
+                          .then((savedRecipe) => {
+                           //   dbx.uploadDB(img,savedRecipe._id);
+                              element.recipe.ingredients.forEach(elements => {
+                                  cleanIng = RemoveAccents(elements.text.toString());
+                                  if ( cleanIng.length > 35 ){
+                                      cleanIng = cleanIng.substr(0,35);
+                                  }
+                                  ing = new Ingredient({
+                                      name: cleanIng
+                                  });
+                                Ingredient.findOne({ name: cleanIng })
+                                  .then(ing => {
+                                      if (ing != null) {
+                                          name = ing.name.toString().toLowerCase();
+                                          Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: name }}})
+                                                  .then(() =>  next())
+                                                  .catch(error => next());
+                                          //next();
+                                      } else {
+                                          name = RemoveAccents(elements.text.toString()).toLowerCase();
+                                          if( name.length > 35 ){
+                                              name = name.substr(0,35);
+                                          }
+                                          ing = new Ingredient({
+                                              name: name
+                                          });
+                                          ing.save()
+                                          .then((savedIng) => {
+                                              Recipe.findByIdAndUpdate(savedRecipe._id, { $push: { ingredients: { ingredient: savedIng.name }}})
+                                                  .then(() =>  next());
+                                          }).catch(error => next());
+                                   }
+                                  })
+                              });
+                              setTimeout(res.redirect("/profile"),10);
+                          }).catch(error => next(error));
+                     }
+                 
+                 }
+             }).catch(error => next(error));
+              
+         });  
+     }).catch(error => {
+         if (error instanceof mongoose.Error.ValidationError) {
+           res.render('recipes/new', {
+             recipe: recipe,
+             error: error.errors
+           });
+         } else {
+           next(error);
+         }
+       });    
 } 
 
 module.exports.rate = (req,res,next) => {
