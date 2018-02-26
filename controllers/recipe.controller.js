@@ -37,15 +37,23 @@ module.exports.showOne = (req, res, next) => {
             average = 0;
         }
          console.log(average);
-         User.findById(req.user._id)
-         .then(user => {
+         if( typeof(req.user) != 'undefined' ){
+            User.findById(req.user._id)
+            .then(user => {
+               res.render('recipes/showOne', {
+                   recipe: recipe,
+                   rating: average,
+                   favorites: user.favorites
+                 });
+            })
+            .catch(error => next(error));
+         } else {
             res.render('recipes/showOne', {
                 recipe: recipe,
-                rating: average,
-                favorites: user.favorites
+                rating: average
               });
-         })
-         .catch(error => next(error));
+         }
+         
          
        }).catch(error => next(error));
 }
