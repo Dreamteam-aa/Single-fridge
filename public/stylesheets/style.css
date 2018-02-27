@@ -45,6 +45,12 @@ height: 75px;
   padding-left: 10%;
   width: 90%;
 }
+
+.logo2 {
+  padding-left: 10%;
+  width: 40%;
+}
+
 .star-rating {
   line-height:32px;
   font-size:1.25em;
