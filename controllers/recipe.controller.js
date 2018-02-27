@@ -368,7 +368,7 @@ module.exports.findResults = function (req, res, next) {
                                       }
                                      })
                                  });
-                                 setTimeout(res.redirect("/profile"),10);
+                                 res.redirect("/profile");
                              }).catch(error => next(error));
                         }
                     
